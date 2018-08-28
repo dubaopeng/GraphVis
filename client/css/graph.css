@@ -1,0 +1,143 @@
+@charset "utf-8";
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/ 
+::-webkit-scrollbar { width: 10px; height: 10px;  background-color: #FeFeFe; } 
+::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);  border-radius: 5px; background-color: #FeFeFe; } 
+::-webkit-scrollbar-thumb {  border-radius: 5px; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.3); background-color: #ddd; }
+
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button {margin:0;padding:0}  /* 初始化标签在所有浏览器中的margin、padding值 */
+fieldset,img {border:0 none}  /* 重置fieldset（表单分组）、图片的边框为0*/
+dl,ul,ol,menu,li {list-style:none}   /* 重置类表前导符号为onne,menu在HTML5中有效 */
+blockquote, q {quotes: none}   /* 重置嵌套引用的引号类型 */
+blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}  /* 重置嵌套引用*/
+input,select,textarea,button {vertical-align:middle}  /* 重置表单控件垂直居中*/
+button {border:0 none;background-color:transparent;cursor:pointer}  /* 重置表单button按钮效果 */
+body {background:#fff}   /* 重置body 页面背景为白色 */
+body,th,td,input,select,textarea,button {font-size:12px;line-height:1 ;font-family:"微软雅黑", "黑体","宋体";color:#666} /* 重置页面文字属性 */
+a {color:#666;text-decoration:none}  /* 重置链接a标签 */
+a:active, a:hover {text-decoration:none}   /* 重置链接a标签的鼠标滑动效果 */
+address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}  /* 重置样式标签的样式 */
+caption {display:none;}    /* 重置表格标题为隐藏 */
+table {width:100%;border-collapse:collapse;border-spacing:0;table-layout:fixed;}    /* 重置table属性 */
+img{vertical-align:top}  /* 图片在当前行内的垂直位置 */
+
+  /* 取消a标签点击后的虚线框 */
+a {outline: none;}  
+a:active {star:expression(this.onFocus=this.blur());}
+
+/*清除浮动--推荐使用*/
+.clear{clear: both;}
+.clearfix:before,.clearfix:after{content: '';display: table;}
+.clearfix:after{clear: both;}
+
+/*body{background: url(../thems/black3.jpg);}*/
+
+
+#container{overflow:hidden; zoom:1;}
+.left{width:250px; margin-bottom:-3000px; padding-bottom:3000px; float:left;border-right:1px solid #CCCCCC;}
+.right{width:220px; margin-bottom:-3000px; padding-bottom:3000px; float:right;border-left:1px solid #CCCCCC;}
+.center{min-height:300px; margin:0 221px 0 252px;}
+
+.toolbar{border-bottom:1px solid #CCCCCC;height:35px;line-height: 35px;font-size: 13px;vertical-align: middle;padding:2px 0 2px 5px;font-weight: bold; font-size: 15px;background: #FFFFFF;color:#1B1B1B;}
+
+.btn-group{position: relative;display: inline-block;margin:3px 2px 1px 5px;}
+.btn-group>.btn:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
+.btn-group>.btn:last-child {border-top-right-radius: 4px;border-top-right-radius: 4px;}
+.btn-group .btn {margin: 0px -1px;}
+.btn-group .btn:hover {background: rgb(220, 255, 255);}
+.btn-group .active {background: rgb(220, 220, 220);}
+.btn-group>.btn{position: relative;float: left;border: 1px solid #ccc;}
+.btn-sm {padding: 5px 10px;font-size: 12px;line-height: 1.5;border-radius: 3px;}
+.btn-default {color: #333;background-color: #fff;border-color: #ccc;}
+
+.btn {display: inline-block;padding: 6px 12px;margin-bottom: 0;font-size: 14px;font-weight: normal;line-height: 1.428571429;text-align: center;white-space: nowrap;vertical-align: middle;cursor: pointer;background-image: none;border: 1px solid transparent;/*border-radius: 4px;*/-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;}
+.q-icon {background-image: url(images/icons-32.png);background-size: 479px 16px;}
+.toolbar-default {background-position: -18px 0px;width: 16px;height: 16px;}
+.toolbar-rectangle_selection {background-position: -296px 0px;width: 16px;height: 16px;}
+.toolbar-pan {background-position: -240px 0px;width: 16px;height: 16px;}
+.toolbar-zoomin {background-position: -425px 0px;width: 16px;height: 16px;}
+.toolbar-zoomout {background-position: -444px 0px;width: 16px;height: 16px;}
+.toolbar-zoomreset {background-position: -462px 0px;width: 16px;height: 16px;}
+.toolbar-zoom_overview {background-position: -407px 0px; width: 16px;height: 16px;}
+.toolbar-search {background-position: -351px 0px;width: 16px;height: 16px;}
+.toolbar-max {background-position: -166px 0px;width: 16px;height: 16px;}
+.toolbar-overview{background-position: -222px 0px;width: 16px;height: 16px;}
+.toolbar-json {background-position: -111px 0px;width: 16px;height: 16px;}
+.toolbar-edge {background-position: -74px 0px; width: 16px;height: 16px;}
+.toolbar-edge_VH {background-position: -55px 0px;width: 16px;height: 16px;}
+.toolbar-print {background-position: -277px 0px;width: 16px;height: 16px;}
+
+.input-group {float: left;height: 30px;line-height: 30px;}
+.input-group > input{height: 28px;line-height:28px;margin-top: -3px; border: 1px solid #ccc;border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-left: 5px;}
+
+#layout-type{
+  width: 190px;
+  height: 34px;
+  line-height: 34px;
+  border: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+#runbtn{color:#FFFFFF;font-weight: bold;background: rgb(70, 179, 245);}
+
+input[type="range"] {
+    -webkit-box-shadow: 0 1px 0 0px #424242, 0 1px 0 #060607 inset, 0px 2px 10px 0px red inset, 1px 0px 2px rgba(0, 0, 0, 0.4) inset, 0 0px 1px rgba(0, 0, 0, 0.6) inset;
+    margin-top: 2px;
+    background-color: #272728;
+    border-radius: 15px;
+    width: 120px;
+    -webkit-appearance: none;
+    height:5px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: default;
+    height: 30px;
+    width: 10px;
+    background: none repeat scroll 0 0 #777;
+    border-radius: 15px;
+    -webkit-box-shadow: 0 -1px 1px black inset;
+}
+
+.params-wrap{}
+.parmas-info{
+	height: 30px;
+  line-height: 30px;
+  padding-left: 8px;
+  font-size: 14px;
+  border-bottom: 1px dashed #EAE3E3;
+}
+
+.colorpick{height:20px;border:1px solid #ccc;cursor: pointer;}
+
+.wrapper-title{height: 30px;line-height:30px;font-size:15px;color:#000;border:1px solid #ccc;background-color:#eee;margin-left:5px;width: calc(100% - 10px);}
+.wrapper-title label{color:#b400ff!important;}
+.node-wrapper{
+   position:absolute;
+   left:5px;
+   right:5px;
+   top:110px;
+   bottom:5px;
+   width:230px;
+   padding: 5px;
+   border:1px solid #ccc;
+   overflow: auto;
+}
+
+.node-wrapper .node-label{
+  font-size: 13px;
+  height: 15px;
+  line-height: 15px;
+  color: #333;
+  width: 100%;
+  padding: 5px 2px;
+  cursor:default;
+  transition: all 0.3s;
+}
+
+.node-wrapper .node-label:hover{
+  background-color: #eee;
+  color: red;
+  transform:translateX(8px) scale(1.1);
+}
+

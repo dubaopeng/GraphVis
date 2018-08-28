@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <title>复杂网络分析</title>
+    </head>
+    <body>
+    		<div style="position: absolute; top: 0;bottom:0;left:2px;width: 250px;background-color: rgb(250, 250, 252);padding: 0;border:2px solid #ccc;">
+    			<div style="width:100%;display:inline-block;height:80px;margin: 0;padding:0;border-bottom:2px solid #ccc;">
+    					<div style="dispaly:inline;margin:25px 10px;">
+    						<div style="float:left;width:180px;">
+	    						<select id="layout-type" style="width:100%; height: 30px;line-height: 30px;">
+	    								<option value="kk">kaiwai layout</option>
+	    								<option value="fr">fr layout</option>
+	    								<option value="fruchterman">fruchterman layout</option>
+	    								<option value="spring">spring layout</option>
+	    								<option value="spring2">spring2 layout</option>
+	    								<option value="arf">arf layout</option>
+	    								<option value="singleCirlce">single circle layout</option>
+	    								<option value="dualCirlce">double circle layout</option>
+	    								<option value="layerCircle">layer circle layout</option>
+	    								<option value="grid">grid layout</option>
+	    								<option value="tree">tree layout</option>
+	    								<option value="radiatree">radiatree layout</option>
+	    								<option value="balloontree">balloontree layout</option>
+	    								<option value="balloon">balloon layout</option>
+	    						</select>	    							
+	    						</div>
+	    					</div>
+	    					<div style="float:left;width:50px;">
+	    						<a id="runbtn" flag="0" href="#" style=" margin-left: 10px; padding: 5px;line-height: 30px;font-size: 15px; text-decoration: none;background-color: blue; color: white;border-radius: 5px;">运行</a>
+	    					</div>
+    					</div>
+    			</div>
+    			<div style="display: inline-block; width: 100%;min-height:200px;margin: 0;padding:0;"></div>
+    		</div> 
+    		
+			<div style="padding:0;margin:0 0 0 255px;border:2px solid #ccc;">
+    			<canvas id="graph-panel"></canvas>
+    		</div>
+</body>
+    <script type="text/javascript" src="../js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="jtopo-0.4.8-min.js"></script>
+    <!-- <script type="text/javascript" src="../data/data1.js"></script> -->
+     <script type="text/javascript" src="../data/data2.js"></script> 
+    <script type="text/javascript" src="../algorims/fr/frLayout.js"></script>
+    <script type="text/javascript" src="../algorims/circle/circleLayout.js"></script>
+    <script type="text/javascript" src="../algorims/arf/arfLayout.js"></script>
+    <script type="text/javascript" src="../algorims/grid/gridLayout.js"></script>
+    <script type="text/javascript" src="../algorims/kk/kkLayout.js"></script>
+    <script type="text/javascript" src="../algorims/circle/dualLayout.js"></script>
+    <script type="text/javascript" src="../algorims/circle/layerLayout.js"></script>
+    <script type="text/javascript" src="../algorims/tree/treeLayout.js"></script>
+    <script type="text/javascript" src="../algorims/tree/radiatreeLayout.js"></script>
+    <script type="text/javascript" src="../algorims/tree/balloonLayout.js"></script>
+    <script type="text/javascript" src="../algorims/tree/balloontreeLayout.js"></script>
+    <script type="text/javascript" src="../algorims/fruchterman/fruchtermanLayout.js"></script>
+    <script type="text/javascript" src="../algorims/spring/springLayout.js"></script>
+    <script type="text/javascript" src="../algorims/spring/springLayout2.js"></script>
+    
+    <script type="text/javascript" src="graphClient.js"></script>
+     
+    <script type="text/javascript">
+     /* 	 var data = {"nodes":[
+     	                     {"id":1,"value":"11111","x":100,"y":100},
+     	                     {"id":2,"value":"2222","x":200,"y":200},
+     	                     {"id":3,"value":"3333","x":300,"y":300},
+     	                     {"id":4,"value":"4444","x":400,"y":400},
+     	                     {"id":5,"value":"5555","x":500,"y":400},
+     	                     {"id":6,"value":"6666","x":510,"y":400},
+     	                     {"id":7,"value":"7777","x":220,"y":330},
+     	                     {"id":8,"value":"8888","x":560,"y":100},
+     	                     {"id":9,"value":"9999","x":666,"y":222},
+     	                     {"id":10,"value":"101010","x":430,"y":100}
+     	                  ],
+     			"links":[
+     			         {"sourceId":1,"targetId":2},
+     			         {"sourceId":1,"targetId":3},
+     			         {"sourceId":1,"targetId":4},
+     			         {"sourceId":1,"targetId":5},
+     			         {"sourceId":1,"targetId":6},
+     			         {"sourceId":2,"targetId":7},
+     			         {"sourceId":2,"targetId":8},
+     			         {"sourceId":2,"targetId":9},
+     			         {"sourceId":2,"targetId":10}
+     			         ]};  */
+	    
+	   var graphClient = null;
+	    $(function(){
+	    	var canvas = document.getElementById("graph-panel");
+	    	
+	    	graphClient = new GraphClient(canvas);
+	    	graphClient.drawData(data);
+	    	
+	    	autoResize();
+	    	
+	    	$("#runbtn").click(function(){
+	    		var flag = $(this).attr("flag");
+	    		var layouttype = $("#layout-type").val();
+	    		
+	    		if(flag == 0){
+	    			$(this).attr("flag",1);
+	    			$(this).text("停止");
+	    			$(this).css({"background-color": "red"});
+	    			
+	    			if(graphClient != null){
+	    				graphClient.runLayout(layouttype);
+	    			}
+	    			
+	    		}else{
+	    			$(this).attr("flag",0);
+	    			$(this).text("运行");
+	    			$(this).css({"background-color": "blue"});
+	    			
+	    			if(graphClient != null){
+	    				graphClient.stopLayout();
+	    			}
+	    		}
+	    	});
+	    });
+	    window.onresize = autoResize;
+	
+	    /**自动设置界面布局大小自适应**/
+	    function autoResize(){
+	    	var minWidth = 1000,minHeight = 500,xmargin =260,ymargin=8;
+	    	var currWinWidth = window.innerWidth-xmargin,currWinHeight = window.innerHeight-ymargin;
+	    	
+	    	currWinWidth = currWinWidth <= minWidth ? minWidth : currWinWidth;
+	    	currWinHeight = currWinHeight <= minHeight ? minHeight : currWinHeight;
+	    	
+	    	$("#graph-panel").attr({width:currWinWidth+"px",height:currWinHeight+"px"});
+	    	
+	    }
+	    
+    </script>
+</html>
