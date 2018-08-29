@@ -17,6 +17,7 @@
 		this.stage = new JTopo.Stage(this.canvas);
 		this.stage.wheelZoom = 0.9;
 		this.scene = new JTopo.Scene(this.stage);
+		//this.stage.eagleEye.visible = true;
 		//this.scene.backgroundColor = "rgba(220,20,20,0.9)";
 		this.scene.background = "thems/black2.jpg";
 	}
@@ -60,16 +61,17 @@
         node.fillColor = "195,30,235";//JTopo.util.randomColor();
 
         node.click(function(evt){
-        	//console.log(this);
         	var templWrapper = $('#neighber-nodes').empty();
+        	var nodeHtml = '';
         	$('#cur-node').text(this.label);
         	this.inLinks.forEach(function(l){
-        		templWrapper.append('<dl class="node-label">'+l.nodeA.label+'</dl>');
+        		nodeHtml += ('<dl class="node-label">'+l.nodeA.label+'</dl>');
         	});
 
         	this.outLinks.forEach(function(l){
-        		templWrapper.append('<dl class="node-label">'+l.nodeZ.label+'</dl>');
+        		nodeHtml += ('<dl class="node-label">'+l.nodeZ.label+'</dl>');
         	});
+        	templWrapper.append(nodeHtml);
         });
 		return node;
 	}
@@ -210,6 +212,7 @@
 	
 	GraphClient.prototype.saveImage = function(){
 		this.stage.saveImageInfo();
+		//this.stage.saveAsLocalImage();
 	}
 	
 	GraphClient.prototype.showOverView = function(flag){
@@ -244,6 +247,12 @@
 	GraphClient.prototype.setNodeSize = function(size){
 		this.nodes.forEach(function(node){
 			node.radius = size;
+		});
+	}
+
+	GraphClient.prototype.setNodeAlpha = function(alpha){
+		this.nodes.forEach(function(node){
+			node.alpha = alpha;
 		});
 	}
 	

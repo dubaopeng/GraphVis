@@ -36,17 +36,18 @@
 		    			</div>
 		    			<div id="runbtn" class="btn btn-default btn-sm">运行</div>
 		    		</div>
-		    		<div class="wrapper-title">【<label id="cur-node">xxx</label>】最近邻集</div>
+		    		<div class="wrapper-title">【<label id="cur-node">节点</label>】最近邻集</div>
 		    		<div id="neighber-nodes" class="node-wrapper"></div>
 	    		
 		    	</div>
 		    </div>
 		    <div class="right">
-		    	<div class="toolbar blue">参数设置</div>
+		    	<div class="toolbar blue">图属性信息</div>
 		    	<div class="params-wrap">
 		    		<div class="parmas-info"><label for="nodecount">点：</label><span id="nodecount">0</span></div>
 		    		<div class="parmas-info"><label for="linkcount">边：</label><span id="linkcount">0</span></div>
 		    		<div class="parmas-info"><label for="nodesize">点大小：</label><input id="nodesize" type="range" min="5" max="30" step="1" value="10"/></div>
+		    		<div class="parmas-info"><label for="nodealpha">透明度：</label><input id="nodealpha" type="range" min="0.1" max="1" step="0.1" value="0.8"/></div>
 		    		<div class="parmas-info"><label for="nodeColor">点颜色：</label><span class="colorpick" id="nodeColor">&emsp;&emsp;&emsp;&emsp;</span></div>
 		    		<div class="parmas-info"><label for="linkColor">边颜色：</label><span class="colorpick" id="linkColor">&emsp;&emsp;&emsp;&emsp;</span></div>
 		    	</div>
@@ -86,7 +87,7 @@
 		    			<div id="findBtn" class="btn btn-default btn-sm" title="搜索"><div class="q-icon toolbar-search"></div></div>
 		    		</div>
 		    	</div>
-		    	<div><canvas id="graph-panel"></canvas></div>
+		    	<div id="graph-panel-wrapper" style="width: 100%;height: 100%;"><canvas id="graph-panel"></canvas></div>
 		    </div>
 		</div>
 </body>
@@ -114,16 +115,24 @@
     <script type="text/javascript">
 	    
 	   var graphClient = null;
-	    $(function(){
+	   $(function(){
+	   		autoResize();
+
 	    	var canvas = document.getElementById("graph-panel");
 	    	
 	    	graphClient = new GraphClient(canvas);
-	    	graphClient.drawData(data2);
+	    	graphClient.drawData(data2);	    	
 	    	
 	    	$("#nodecount").text(graphClient.nodes.length);
 	    	$("#linkcount").text(graphClient.links.length);
+
+            var templWrapper = $('#neighber-nodes').empty();
+            var nodeHtml = '';
+	    	graphClient.nodes.forEach(function(_node){
+        		nodeHtml += ('<dl class="node-label">'+_node.label+'</dl>');
+	    	});
+	    	templWrapper.append(nodeHtml);
 	    	
-	    	autoResize();
 	    	
 	    	$("#runbtn").click(function(){
 	    		var layouttype = $("#layout-type").val();
@@ -201,31 +210,41 @@
 	    		var size = $(this).val();
 	    		graphClient.setNodeSize(size);
 	    	});
+
+	    	$("#nodealpha").on("change",function(){
+	    		var alpha = $(this).val();
+	    		graphClient.setNodeAlpha(alpha);
+	    	});
+
+	    	$("#neighber-nodes").delegate('.node-label','click',function(){
+	    		var text = $(this).text();
+	    		graphClient.findNode(text);
+	    	});
 	    	
 	    	//节点的颜色选择器
 	    	$('#nodeColor').colpick({
 				//colorScheme:'dark',
 				layout:'rgbhex',
-				color:'05f529',
+				color:'d91bf0',
 				onSubmit:function(hsb,hex,rgb,el) {
 					$(el).css('background-color', '#'+hex);
 					$(el).colpickHide();
 					graphClient.setNodeColor(rgb.r,rgb.g,rgb.b);
 				}
 			})
-			.css('background-color', 'rgb(0,255,0)');
+			.css('background-color', 'rgb(195,30,235)');
 			
 			$('#linkColor').colpick({
 				//colorScheme:'dark',
 				layout:'rgbhex',
-				color:'05f529',
+				color:'fafafa',
 				onSubmit:function(hsb,hex,rgb,el) {
 					$(el).css('background-color', '#'+hex);
 					$(el).colpickHide();
 					graphClient.setLinkColor(rgb.r,rgb.g,rgb.b);
 				}
 			})
-			.css('background-color', 'rgb(0,255,0)');
+			.css('background-color', 'rgb(250,255,250)');
 			
 	    });
 	    window.onresize = autoResize;
