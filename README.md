@@ -1,4 +1,4 @@
-# visualization
+# GraphVis
 
 示例网址：[图说数据](http://www.graphvis.cn)
 
