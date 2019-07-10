@@ -12,6 +12,8 @@
 支持常见经典社区划分算法，如：chineseWisper, lovin等
 
 ## 知识图谱可视化
+![blockchain](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=702257389,1274025419&fm=27&gp=0.jpg "区块链")
+
 
 ## 复杂网络分析
 
