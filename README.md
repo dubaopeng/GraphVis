@@ -1,5 +1,7 @@
 # GraphVis
 
+## 即将开源，敬请期待~~
+
 主页：[图说数据 www.graphvis.cn](http://www.graphvis.cn)
 
 
