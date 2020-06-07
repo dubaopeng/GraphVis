@@ -1,0 +1,146 @@
+html,body{overflow: hidden;}
+.wrapper-panel {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #ebebeb;
+}
+.right-side{position: absolute;width:250px;right:0;height:100%;border:1px solid #ccc;background: #fafafa;}
+.right-side .params-warp{
+  min-height:50px;
+  border: 1px solid #e7e4e4;
+  margin: 5px 0;
+  padding: 2px;
+}
+.right-side .side-bar-btn.right{
+  position: absolute;bottom: 0;font-size:20px;
+}
+.right-side .side-bar-btn.left{
+  position: absolute;bottom: 0;font-size:20px;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+}
+
+.side-bar-btn > a{
+  color: #b4b4f3;
+}
+.side-bar-btn > a:hover{
+  color: #9191f7;
+}
+
+.left-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    height: 100%;
+    background-color: #fafafa;
+    border-right: 1px solid #e5e2e2;
+}
+
+.bottom-toolbar {
+    position: absolute;
+    bottom: 0;
+    left: 45px;
+    height: 30px;
+    width: calc(100% - 45px);
+    background-color: #fafafa;
+}
+
+.left-toolbar > ul{
+  padding: 0;
+}
+
+.bottom-toolbar > ul{
+  display: inline-block;
+  padding: 0;
+}
+
+.left-toolbar li {
+    display: block;
+    font-size: 15px;
+    text-align: center;
+    height: 35px;
+    color: #6fbbf1;
+    line-height: 35px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.left-toolbar li.end {
+   border-bottom: 1px solid #ccc;
+   margin-bottom: 3px;
+}
+
+.left-toolbar li:hover,.left-toolbar li.active{
+    background-color: #6ea36d;
+    color: #fff;
+}
+
+.bottom-toolbar >ul > li{
+    display: inline-block;
+    font-size: 14px;
+    text-align: center;
+    width: 30px;
+    color: #ccc9c9;
+    line-height: 30px;
+    cursor: pointer;
+    padding: 0;
+    list-style: none;
+}
+
+
+.select {
+  display: inline-block;
+  width: 215px;
+  height: 30px;
+  position: relative;
+  vertical-align: middle;
+  padding: 0;
+  overflow: hidden;
+  background-color: #fff;
+  color: #555;
+  border: 1px solid #aaa;
+  text-shadow: none;
+  transition: box-shadow 0.25s ease;
+  z-index: 2;
+}
+
+
+.small-table{
+  color: #fff;
+  height: auto;
+  width: 100%;
+  min-height:50px;
+}
+
+.small-table tr td{
+    padding: 10px 8px;
+    border: 1px solid #e2e5e7;
+    color: #505253;
+    font-size: 12px;
+}
+
+.small-table td > input{
+  width:80px;
+  margin:0 5px;
+  padding:0 5px;
+  color: #333;
+}
+
+.small-selector{
+  width: 100px;
+  height:22px;
+}
+.longbtn{
+  margin-top:5px;text-align: center;
+}
+.tiptext{
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 5px;
+}
