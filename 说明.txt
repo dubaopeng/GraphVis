@@ -1,9 +1,7 @@
-即将开源，敬请期待~~
-
-当前版本:visgraph-0.0.4.min.js
+为复杂网络分析、社交网络、案件分析、图数据展示、布局算法、知识图谱等应用场景开发的可视化展示分析组件。
 
 注意事项：
-1、该组件会不定期更新优化，增加新接口，如果使用请保持关注,及时下载更新。
+1、该组件会定期更新优化，增加新接口，如果使用请保持关注,及时下载更新。
 2、示例代码可自行取消注释，查看效果，显示图标，需要放在服务容器中查看。
 3、如有特殊需要，也可接受定制开发。
 
@@ -17,12 +15,14 @@
 
 
 主页：http://www.graphvis.cn
-开发文档地址：http://www.graphvis.cn/graphvis/dev-doc/index.html
-应用实例地址：http://www.graphvis.cn/graphvis/analyze.html
+开发文档地址：http://www.graphvis.cn/graph/dev-doc/index.html
+复杂网络分析实例：http://www.graphvis.cn/graph/complex/index.html
+案件分析实例：http://www.graphvis.cn/graph/network/index.html
+知识图谱实例：http://www.graphvis.cn/knowlege/index.html
 
 
 
-最近更新时间：2019-07-07 22:00
+最近更新时间：2020-06-07 23:00
 定制开发可联系作者
 
 

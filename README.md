@@ -2,11 +2,8 @@
 
 ## 现已开源，欢迎star，同时也接受贡献者参与合作
 
-主页：[GraphVis www.graphvis.cn](http://www.graphvis.cn)
-
-开发文档：[GraphVis 开发文档 www.graphvis.cn](http://www.graphvis.cn/graph/dev-doc/index.html)
-
-码云地址：[GraphVis](https://gitee.com/baopengdu/GraphVis) 
+主页：[图说数据 www.graphvis.cn](http://www.graphvis.cn)
+开发文档：[组件开发文档 www.graphvis.cn](http://www.graphvis.cn/graph/dev-doc/index.html)
 
 
 专注于关系网络数据可视化分析，适用于复杂网络可视分析，知识图谱可视化，网络拓扑图，关系图等场景应用。
