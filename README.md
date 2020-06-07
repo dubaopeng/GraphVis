@@ -1,8 +1,9 @@
 # GraphVis
 
-## 即将开源，敬请期待~~
+## 现已开源，欢迎star，同时也接受贡献者参与合作
 
 主页：[图说数据 www.graphvis.cn](http://www.graphvis.cn)
+开发文档：[组件开发文档 www.graphvis.cn](http://www.graphvis.cn/graph/dev-doc/index.html)
 
 
 专注于关系网络数据可视化分析，适用于复杂网络可视分析，知识图谱可视化，网络拓扑图，关系图等场景应用。
@@ -14,9 +15,11 @@
 3. 支持常见经典社区划分算法，如：chineseWisper, lovin等
 
 ```
-可视化组件获取方式，进入上方主页链接后，右侧下载试用，可以下载组件开发包，里面有示例、及其基础操作代码，开放文档说明等
-```
+开发文档会持续进行完善，同时会开放一些基于该组件开发的应用实例，方便开发人员学习使用。
 
+欢迎有兴趣的同学们参与进来，贡献自己的能量，把GraphVis一起做好。
+
+```
 
 ## 知识图谱可视化
 ![图谱应用1](http://media.graphvis.cn/tupuvis.png)
@@ -35,4 +38,7 @@
 ![网络拓扑结构](http://media.graphvis.cn/secondbg.png)
 
 
+## GraphVis 交流讨论
+![QQ交流群](http://media.graphvis.cn/QQ-ercode.jpg)
+![微信交流群](http://media.graphvis.cn/wxerCode.png)
 
