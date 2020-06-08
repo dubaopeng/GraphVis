@@ -1,3 +1,15 @@
+/*
+ * GraphVis v1.0.0.20200608
+ * 图数据可视化展示、分析组件，集成常见的经典布局算法，社区划分算法，高效、易用、可扩展！
+ * Copyright (c) 2020 dubaopeng http://www.graphvis.cn All rights reserved.
+ * Licensed ( http://www.apache.org/licenses/MIT )
+ *
+ * GraphVis官方网站
+ * http://www.graphvis.cn
+ *
+ * 开源地址:
+ * https://gitee.com/baopengdu/GraphVis
+ **/
 ;(function(){
 	var BicomponentClusterer = function(nodes,links){
 		this.nodes = nodes;
