@@ -2874,6 +2874,7 @@
         link.label = l.label||l.type||'';
         link.weight = l.weight || 1;
         link.lineWidth = l.lineWidth || 3;
+        link.properties=l.properties||{};
         
         _self.scene.add(link);
         _self.links.push(link);
