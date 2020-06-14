@@ -9,7 +9,7 @@ $(function(){
 	//2、模拟加载服务端数据，可视化显示
 	var data = loadData(); 
 	visgraph.drawData(data);
-
+	//自动缩放居中显示
 	visgraph.setZoom('auto');
 
 	//3、根据需要自定义显示样式
@@ -69,20 +69,57 @@ function initVisGraph(visDomId){
 	  hide : function(){}
 	};
 
-	//创建图对象
+	//创建图对象，参数一:图层包裹元素, 参数二:图中元素显示配置项
 	var _visGraph = new VisGraph(document.getElementById(visDomId),
 		{
-			'rightMenu':{
-				nodeMenu:NodeRightMenu,  //节点右键菜单配置
-				linkMenu:LinkRightMenu   // 连线右键菜单配置
-			},
-			onNodeClick : function(event,node){ //节点点击事件回调
-				// do something
-				//console.log('clcik me');
-			},
-			highLightNeiber:true, //相邻节点高度标志
-			wheelZoom:1,//滚轮缩放开关，不使用时不设置
-			marginLeft:-40
+            node:{ //节点的默认配置
+                label:{ //标签配置
+                    show:true, //是否显示
+                    color:'50,50,50',//字体颜色
+                    font:'12px 微软雅黑',//字体大小及类型
+                    wrapText:false, //节点包裹文字
+                    textPosition:'Middle_Center'//文字位置 Top_Center,Bottom_Center,Middle_Right
+                },
+                shape:'circle',//节点形状 circle,rect,ellipse,triangle,star,polygon,text
+                color:'20,20,200',//节点颜色
+				borderColor:'10,255,10',//边框颜色
+				borderWidth:0,//边框宽度,
+				lineDash:[3,2],//边框虚线间隔,borderWidth>0时生效
+                showShadow:true,//显示选中阴影
+                shadowColor:'10,240,10',//阴影颜色
+                alpha:1,//节点透明度
+                size:60, //节点默认大小
+                onClick : function(event,node){ //节点点击事件回调
+                    // do something
+                    console.log('click node----['+node.id+':'+node.label+']');
+                }
+            },
+            link:{ //连线的默认配置
+                label:{ //连线标签
+                    show:false, //是否显示
+                    color:'20,20,20', //字体颜色
+                    font:'11px 微软雅黑'//字体大小及类型
+                },
+				lineType:'direct',//连线类型,direct,curver,vlink,hlink,bezier,vbezier,hbezier
+                colorType:'defined',//连线颜色类型 source:继承source颜色,target:继承target颜色 both:用双边颜色，defined:自定义
+                color:'180,180,180', //连线颜色
+                alpha:1,  // 连线透明度
+                lineWidth:5, //连线宽度
+				lineDash:[0],//虚线间隔样式如：[5,8]
+				showArrow:true,//显示箭头
+                onClick :function(event,link){ //连线点击事件回调
+                    // do something
+                    console.log('click link---['+link.source.id+'-->'+link.target.id+']');
+                }
+            },
+            highLightNeiber:true, //相邻节点高度标志
+            backGroundType:'png',//保存图片的类型，支持png、jpeg
+            wheelZoom:0.8,//滚轮缩放开关，不使用时不设置[0,1]
+            marginLeft:-40, //对右键菜单位置进行调校的参数
+            rightMenu:{
+                nodeMenu:NodeRightMenu,  //节点右键菜单配置
+                linkMenu:LinkRightMenu   // 连线右键菜单配置
+            }
 		}
 	);
 	return _visGraph;
@@ -102,20 +139,24 @@ function definedGraphStyle(){
 
 	var nodes=gdata.nodes;//获取所有点，设置点的样式
 	nodes.forEach(function(node) {
-		
 		var inDegree = (node.inLinks||[]).length; //获取节点的入度
 		var outDegree = (node.outLinks||[]).length; //获取节点的出度
 
 		//对度大于3的点显示标签，设置为选中样式
-		if((inDegree + outDegree) > 3){
-			node.showlabel=true;  //显示点的标签
+		if((inDegree + outDegree) > 5){
+			//node.showlabel=true;  //显示点的标签
 			//node.selected=true;   //显示选中样式
-			//node.setImage('images/T1030001.svg');//设置图片路径
+			//node.borderColor=node.fillColor;//边框颜色
+            node.borderColor=randomColor();
+			node.borderWidth=5; //增加边框
+			node.lineDash=[3,2]; //边框虚线
+			node.setImage('images/T1030001.svg');//设置图片路径
 		}
-		node.font='30px yahei'; //字体大小 类型
-		node.fontColor='50,50,50'; //点的字体颜色
-		node.textPosition='Bottom_Center'; //字体位置（下方居中）
-
+		node.font='14px 微软雅黑'; //字体大小 类型
+		//node.fontColor='50,50,50'; //点的字体颜色
+		//node.textPosition='Bottom_Center'; //字体位置（下方居中）
+		//node.scaleX=1;//缩放比例
+		//node.scaleY=1;//缩放比例
 		//node.wrapText = true;//节点大小包裹文字
 	    //node.fillColor=randomColor();//点填充颜色
 	    //node.shape='star'; //点形状设置
@@ -125,13 +166,13 @@ function definedGraphStyle(){
 	//设置边的可视化样式
 	var links = gdata.links; //获取所有边
 	links.forEach(function(link){
-	    link.showlabel=true; //显示连线的标签
+	    //link.showlabel=true; //显示连线的标签
 	    link.fontColor='50,50,50';//设置边的标签颜色
-	    link.font='14px yahei';//设置连线的粗细
+	    link.font='14px 微软雅黑';//设置连线的粗细
 
-	    link.lineWidth=3;//设置连线的粗细
-	    link.colorType='d'; //连线的颜色继承源节点 s:源点 t:目标点 d:自定义
-	    link.strokeColor='115,115,115'; //设置边的颜色
+	    //link.lineWidth=3;//设置连线的粗细
+	    //link.colorType='defined'; //连线的颜色继承源节点
+	    //link.strokeColor='115,115,115'; //设置边的颜色
 	});
 };
 
@@ -525,7 +566,7 @@ function mockInteractiveData(){
 					fontColor:'220,250,250',  //字体颜色
 					textPosition:'Middle_Center' //字体位置
 				});
-				childNode.font = '11px yahei';
+				childNode.font = '11px 微软雅黑';
 				childNode.tipText='10'; //节点提示文字
 
 				//绑定双击事件
@@ -688,5 +729,20 @@ function commonOperateEvent(){
 				break;
 		}
 	});
+
+	$('#searchNode').on('click',function(){
+		var nodeName = $.trim($('#nodeName').val());
+		var node = visgraph.findNode(nodeName);
+		$('#nodeInfo').val(JSON.stringify({id:node.id,label:node.label,type:node.type,x:node.x,y:node.y,properties:node.properties}));
+    });
+
+    $('#findPath').on('click',function(){
+        var soureNode = $.trim($('#soureNode').val());
+        var targetNode = $.trim($('#targetNode').val());
+        visgraph.pathAnalyze(soureNode,targetNode);
+        //visgraph.findShortPath(soureNode,targetNode);
+    });
+
+
 };
 

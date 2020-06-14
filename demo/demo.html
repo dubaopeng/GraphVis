@@ -356,6 +356,52 @@
                 </div> 
             </div>
 
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingSenven">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSenven" aria-expanded="false" aria-controls="collapseSenven">
+                           查找节点
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseSenven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSenven">
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input id="nodeName" type="text" class="form-control input-md">
+                            <span id="searchNode" class="input-group-addon btn btn-success">搜索</span>
+                        </div>
+                        <div>
+                            <textarea id="nodeInfo"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingEight">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                            查找路径
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input id="soureNode" type="text" placeholder="输入起始节点名称" class="form-control input-md">
+                        </div>
+                        <div class="input-group">
+                            <input id="targetNode" type="text" placeholder="输入目标节点名称" class="form-control input-md">
+                        </div>
+                        <div class="input-group">
+                            <button id="findPath" type="button" class="btn btn-sm btn-success" style="width:200px;">
+                                <i class="fa fa-search"></i>&nbsp;开始查找
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>

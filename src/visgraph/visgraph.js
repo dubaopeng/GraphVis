@@ -192,9 +192,6 @@
         return Math.floor(255 * Math.random()) + "," + Math.floor(255 * Math.random()) + "," + Math.floor(255 * Math.random())
     }
 
-    function isIntsect() {
-    }
-
     function getProperties(a, b) {
         for (var c = "", d = 0; d < b.length; d++) {
             d > 0 && (c += ",");
@@ -295,7 +292,6 @@
         removeFromArray: removeFromArray,
         cloneEvent: cloneEvent,
         randomColor: randomColor,
-        isIntsect: isIntsect,
         getElementsBound: getElementsBound,
         genImageAlarm: genImageAlarm,
         getOffsetPosition: getOffsetPosition,
@@ -327,8 +323,8 @@
                     this.exportCanvas.width = realWidth + paddingX, 
                     this.exportCanvas.height = realHeight + paddingY;
 
-                    var scaleX = realWidth / rectWidth, 
-                        scaleY = realHeight / rectHeight;
+                    /*var scaleX = realWidth / rectWidth,
+                        scaleY = realHeight / rectHeight;*/
 
                 }else{
                     this.exportCanvas.width = Math.max(rectWidth, a.canvas.width);
@@ -1173,16 +1169,21 @@
           }, 
           this.initialize(), 
           this.paintSelected = function (a) {
-              if(0 != this.showSelected && this.selected == 0){
+              if(0 != this.showSelected || this.selected != 0){
                   a.save(),
                   a.beginPath();
+
+                  if(this.borderWidth > 0 && this.lineDash && this.lineDash.length > 1){
+                      a.setLineDash(this.lineDash);//边框虚线样式
+                  }
+
                   if(this.image){
                       a.lineWidth = this.borderWidth;
-                      a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+(this.alpha*0.6)+')';
-                      a.arc(0,0,this.width/2+2, 0, 2*Math.PI,true);
+                      a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+(this.alpha)+')';
+                      a.arc(0,0,this.width/2, 0, 2*Math.PI,true);
                   }else{
-                      a.lineWidth = this.borderWidth;
-                      a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+this.alpha+')';
+                      a.lineWidth = this.borderWidth+5;
+                      a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+(this.alpha*0.8)+')';
                       this.paintShape(a);
                   }
                   a.closePath(),
@@ -1372,22 +1373,24 @@
               } else {
                   a.save();
                   a.beginPath();
-                  a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
                   this.paintShape(a);
                   a.closePath();
-
                   if(this.selected){
-                      a.lineWidth=Math.max(Math.round(this.width/8),5);
-                      a.strokeStyle="rgba("+this.borderColor+","+(this.alpha*0.5)+ ")";
+                      a.lineWidth=this.borderWidth;
+                      a.strokeStyle="rgba("+this.borderColor+","+(this.alpha*0.8)+ ")";
                       a.stroke();
                   }else{
                     if(this.borderWidth > 0){
-                      a.lineWidth=this.borderWidth;
-                      a.strokeStyle="rgba(" +this.borderColor + ","+(this.alpha*0.6)+ ")";
-                      a.stroke();
+                        if(this.lineDash && this.lineDash.length > 1){
+                            a.setLineDash(this.lineDash);//边框虚线样式
+                        }
+                        a.lineWidth=this.borderWidth;
+                        a.strokeStyle="rgba(" +this.borderColor + ","+(this.alpha)+ ")";
+                        a.stroke();
                     }
                   }
                   this.paintShadow(a);
+                  a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
                   a.fill();
                   a.restore();
               }
@@ -1519,10 +1522,10 @@
           };
 
           this.paintShadow = function(a){
-              if(this.showShadow){
+              if(this.showShadow && this.selected){
                 a.shadowBlur = 20,
-                a.shadowColor = "rgba(" +this.shadowColor + ","+(this.alpha*0.8)+ ")",
-                a.shadowOffsetX = 0, 
+                a.shadowColor = "rgba(" +this.shadowColor + ","+(this.alpha*0.9)+ ")",
+                a.shadowOffsetX = 0,
                 a.shadowOffsetY = 0;
               }
           },
@@ -1531,28 +1534,25 @@
             a.save(),
             a.beginPath();
             if(this.selected){
-              //a.arc(0,0,this.width/2+2,0,Math.PI*2,false);
-              //this.showShadow=true;
               a.shadowBlur = 20,
-              a.shadowColor = "rgba(" +this.shadowColor + ","+(this.alpha*0.8)+ ")",
+              a.shadowColor = "rgba(" +this.shadowColor + ","+(this.alpha)+ ")",
               a.shadowOffsetX = 0, 
               a.shadowOffsetY = 0;
-            }else{
-              //a.arc(0,0,this.width/2,0,Math.PI*2,false);
-              //this.showShadow=false;
             }
             a.arc(0,0,this.width/2,0,Math.PI*2,false);
             a.closePath();
 
-            a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
-            this.paintShadow(a);
-            a.fill();
-
             if(this.borderWidth > 0){
-              a.lineWidth=this.borderWidth;
-              a.strokeStyle="rgba(" +(this.borderColor||this.fillColor) + ","+(this.alpha*0.6)+ ")";
-              a.stroke();
+                if(this.lineDash && this.lineDash.length > 1){
+                    a.setLineDash(this.lineDash);//边框虚线样式
+                }
+                a.lineWidth=this.borderWidth;
+                a.strokeStyle="rgba(" +(this.borderColor||this.fillColor) + ","+(this.alpha*0.8)+ ")";
+                a.stroke();
             }
+            a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
+            //this.paintShadow(a);
+            a.fill();
             a.restore();
           },
           this.transformContentToMultiLineText = function(ctx,text,contentWidth,lineNumber){
@@ -1714,7 +1714,7 @@
                   null != this.source && this.source.outLinks.push(this), 
                   null != this.target && this.target.inLinks.push(this), 
                   this.caculateIndex(), 
-                  this.font = "13px yahei", 
+                  this.font = "13px 微软雅黑",
                   this.fontColor = "120,120,120", 
                   this.lineWidth = 3, 
                   this.lineJoin = "miter", 
@@ -1922,9 +1922,9 @@
           this.initialize(a, b, c),
           this.paint = function (a) {
               if (null != this.source && null != !this.target) {
-                  if(this.colorType=='s'){
+                  if(this.colorType=='source'){
                       this.strokeColor=this.source.fillColor;
-                  }else if(this.colorType=='t'){
+                  }else if(this.colorType=='target' || this.colorType=='both'){
                       this.strokeColor=this.target.fillColor;
                   }
 
@@ -2195,8 +2195,8 @@
           },
 
           this.getArrowRadius = function(){
-              var raduis = 2*this.lineWidth;
-              return Math.max(raduis, 8);
+              var raduis = 4*this.lineWidth;
+              return Math.min(raduis,50);
           },
 
           this.paintSpecialArrow = function(b,sourceP,targetP){
@@ -2450,7 +2450,7 @@
               this.borderWidth = 0, 
               this.borderColor = "255,255,255", 
               this.borderRadius = null, 
-              this.font = "20px yahei", 
+              this.font = "20px 微软雅黑",
               this.fontColor = "0,255,0", 
               this.text = c, 
               this.textPosition = "Top_Left", 
@@ -2563,7 +2563,6 @@
                 this.layout = new DGraph.layout.AutoBoxLayout;
               }
           }
-
       }
       b.prototype = new a.InteractiveElement, a.Box = b
   }(DGraph), function (a) {
@@ -2648,150 +2647,274 @@
       };
   }(DGraph);
 
-  var VisualGraph = function(container,config){
-    if(container == null || config == null){
-        return;
-    }
-    this.stage = new DGraph.Stage(container);
-    this.canvas = this.stage.canvas;
-    this.scene = null;
-    this.nodes = [];
-    this.links = [];
-    this.nodeIdIndex=1;
-    this.loopName = null;
-    this.currentNode=null;
-    this.currentLink=null;
-    this.showLinkFlag = true;
-    this.config = config||{}; 
-    this.defaultNodeSize = 50;
-    this.defaultNodeColor ='10,125,225';
-    this.defaultLabelColor ='10,125,225';
-    this.linkColorConfig= {linkColorType:0,color:'115,115,115'};
-    this.highLightNeiber = true;
-    this.backGroundType = 'png';
-    this.typeMapStyle = {}; 
-    this.lineTypeMapStyle={};
-    this.currentLayout = null;
-    this.isDerictedGraph = true;
-    this.clusterBoxes=[];
-    this.currentCluster=null;
+    var VisualGraph = function(container,config){
+        if(container == null){
+            return;
+        }
+        this.defaultConfig={
+            node:{ //节点的默认配置
+                label:{ //标签配置
+                    show:true, //是否显示
+                    color:'50,50,50',//字体颜色
+                    font:'12px 微软雅黑',//字体大小及类型
+                    wrapText:false,//节点包裹文字
+                    textPosition:'Middle_Center'//文字位置 Top_Center,Bottom_Center,Middle_Right
+                },
+                shape:'circle',//节点形状 circle,rect,ellipse,triangle,star,polygon,text
+                color:'20,20,200',//节点颜色
+                borderColor:'10,10,10',//边框颜色
+                borderWidth:0,//边框宽度
+                lineDash:[3,2],//边框虚线间隔,borderWidth>0时生效
+                showShadow:false,//显示选中阴影
+                shadowColor:'0,255,0',//阴影颜色
+                alpha:1,//节点透明度
+                size:60, //节点默认大小
+                onClick : function(event,node){}//节点点击事件回调
+            },
+            link:{ //连线的默认配置
+                label:{ //连线标签
+                    show:true, //是否显示
+                    color:'20,20,20', //字体颜色
+                    font:'11px 微软雅黑'//字体大小及类型
+                },
+                lineType:'direct',//连线类型,curver,vlink,hlink,bezier,vbezier,hbezier
+                colorType:'source',//连线颜色类型 source:继承source颜色,target:继承target颜色 both:用双边颜色，d:自定义
+                color:'10,10,10', //连线颜色
+                alpha:1,  // 连线透明度
+                lineWidth:3, //连线宽度
+                lineDash:[0],//虚线间隔样式如：[5,8]
+                showArrow:true,//显示连线箭头
+                onClick :function(event,link){}//连线点击事件回调
+            },
+            highLightNeiber:true, //相邻节点高度标志
+            backGroundType:'png',//保存图片的类型，支持png、jpeg
+            wheelZoom:1,//滚轮缩放开关，不使用时不设置
+            marginLeft:0
+        };
+        this.config = this.mergeConfig(config,this.defaultConfig);
 
-    this.drawLinkFlag=false;
-    this.virNode=null;
-    this.apikey=null;
-    this.wheelZoom=0.9;
+        this.stage = new DGraph.Stage(container);
+        this.canvas = this.stage.canvas;
+        this.scene = null;
+        this.nodes = [];
+        this.links = [];
+        this.nodeIdIndex=1;
+        this.loopName = null;
+        this.currentNode=null;
+        this.currentLink=null;
+        this.showLinkFlag = true;
+        this.defaultNodeColor =this.config.node.color;
+        this.highLightNeiber = this.config.highLightNeiber;
+        this.backGroundType = this.config.backGroundType;
+        this.typeMapStyle = {};
+        this.lineTypeMapStyle={};
+        this.isDerictedGraph = true;
+        this.clusterBoxes=[];
+        this.currentCluster=null;
+        this.currentLayout = null;
 
-    this.ilayout={
-      size : [this.canvas.width||1000, this.canvas.height||600],
-      alpha : 0.1,
-      friction: 0.9,
-      linkDistance : 150,
-      linkStrength : 0.09,
-      charge : -220,
-      gravity :  0.015,
-      theta :  0.8,
-      counter : 0,
-      loopName:null
+        this.drawLinkFlag=false;
+        this.virNode=null;
+
+        this.ilayout={
+          size : [this.canvas.width||1000, this.canvas.height||600],
+          alpha : 0.1,
+          friction: 0.9,
+          linkDistance : 150,
+          linkStrength : 0.09,
+          charge : -220,
+          gravity :  0.015,
+          theta :  0.8,
+          counter : 0,
+          loopName:null
+        };
+        this.init();
     };
 
-    this.init();
-  };
-
-  VisualGraph.prototype.checkHasPermission = function(){
-      if(!this.config){
-        return false;
-      }
-      var _apikey=this.config['apikey'];
-      if(_apikey == null || LocalSign.checkKey(_apikey) == false){
-        return false;
-      }
-      if(LocalSign.checkPeriod()){
-        return false;
-      }
-      this.apikey = _apikey;
-      return true;
-  };
-
-  VisualGraph.prototype.init = function(){
-    var _self = this;
-    this.stage.wheelZoom = this.wheelZoom;
-    if(_self.scene != null){
-      _self.scene.clear();
-      _self.stage.remove(_self.scene);
-    }
-    _self.scene = new DGraph.Scene(this.stage);
-    _self.nodes = [];
-    _self.links = [];
-    _self.typeMapStyle = {};
-    _self.lineTypeMapStyle={};
-
-    if(_self.config.hasOwnProperty('highLightNeiber')){
-        _self.highLightNeiber = _self.config['highLightNeiber'];
-    }
-
-    if(_self.config.hasOwnProperty('linkColorConfig')){
-       _self.linkColorConfig = _self.config['linkColorConfig'];
-    }
-
-    _self.initDrawLinkBase();
-  };
-
-  VisualGraph.prototype.initDrawLinkBase = function(){
-    var _self = this;
-    var virNode = new DGraph.Node();
-          virNode.radius = 1;
-          virNode.show=false;
-          virNode.dragable=false;
-          virNode.fillColor='10,10,10';
-          virNode.alpha=0.1;
-        virNode.showSelected=false;
-      _self.virNode=virNode;
-    var pixelRatio = _self.stage.pixelRatio;
-
-    _self.scene.mousemove(function(e){
-        if(_self.drawLinkFlag){
-          if(!_self.virNode.show){
-            _self.virNode.show=true;
-            _self.scene.add(_self.virNode);
-          }
-
-          if(_self.virLink == null ){
-            var virLink = new DGraph.Edge(_self.currentNode,_self.virNode);
-            virLink.lineWidth = 2;
-            virLink.alpha = 0.8;
-            virLink.strokeColor = '50,250,50';
-            virLink.lineDash = [5,8];
-            virLink.showSelected=false;
-            _self.virLink=virLink;
-            _self.scene.add(_self.virLink);
-          }
-          var position = {x:event.pageX-(_self.config.marginLeft||0),y:event.pageY-(_self.config.marginTop||0)};
-          var p = _self.scene.toSceneEvent(position);
-
-          _self.virNode.x=p.x*pixelRatio;
-          _self.virNode.y=p.y*pixelRatio;
+    VisualGraph.prototype.init = function(){
+        var _self = this;
+        this.stage.wheelZoom = this.config.wheelZoom;
+        if(_self.scene != null){
+          _self.scene.clear();
+          _self.stage.remove(_self.scene);
         }
-    });
+        _self.scene = new DGraph.Scene(this.stage);
+        _self.nodes = [];
+        _self.links = [];
+        _self.typeMapStyle = {};
+        _self.lineTypeMapStyle={};
 
-    _self.scene.dbclick(function(e){
-      _self.drawLinkFlag=false;
-      if(_self.virNode.show){
-        _self.virNode.show=false;
-          _self.scene.remove(_self.virNode);
-      }
+        _self.initDrawLinkBase();
+    };
 
-      if(_self.virLink){
-        _self.scene.remove(_self.virLink);
-        _self.virLink=null;
-      }
-    });
+    VisualGraph.prototype.initDrawLinkBase = function(){
+        var _self = this;
+        var virNode = new DGraph.Node();
+              virNode.radius = 1;
+              virNode.show=false;
+              virNode.dragable=false;
+              virNode.fillColor='10,10,10';
+              virNode.alpha=0.1;
+            virNode.showSelected=false;
+          _self.virNode=virNode;
+        var pixelRatio = _self.stage.pixelRatio;
 
-    _self.scene.click(function(e){
-      _self.hideAllRightMenu();
-    });
-  };
+        _self.scene.mousemove(function(e){
+            if(_self.drawLinkFlag){
+              if(!_self.virNode.show){
+                _self.virNode.show=true;
+                _self.scene.add(_self.virNode);
+              }
 
-  VisualGraph.prototype.hideAllRightMenu = function(){
+              if(_self.virLink == null ){
+                var virLink = new DGraph.Edge(_self.currentNode,_self.virNode);
+                virLink.lineWidth = 2;
+                virLink.alpha = 0.8;
+                virLink.strokeColor = '50,250,50';
+                virLink.lineDash = [5,8];
+                virLink.showSelected=false;
+                _self.virLink=virLink;
+                _self.scene.add(_self.virLink);
+              }
+              var position = {x:event.pageX-(_self.config.marginLeft||0),y:event.pageY-(_self.config.marginTop||0)};
+              var p = _self.scene.toSceneEvent(position);
+
+              _self.virNode.x=p.x*pixelRatio;
+              _self.virNode.y=p.y*pixelRatio;
+            }
+        });
+
+        _self.scene.dbclick(function(e){
+          _self.drawLinkFlag=false;
+          if(_self.virNode.show){
+            _self.virNode.show=false;
+              _self.scene.remove(_self.virNode);
+          }
+
+          if(_self.virLink){
+            _self.scene.remove(_self.virLink);
+            _self.virLink=null;
+          }
+        });
+
+        _self.scene.click(function(e){
+          _self.hideAllRightMenu();
+        });
+    };
+
+    VisualGraph.prototype.mergeConfig = function(config,defaultConfig) {
+        if(!config){return defaultConfig;}
+        var newConfig =Object.assign({},defaultConfig);
+        if(config.hasOwnProperty('node')){
+            var node = config.node;
+            if(node.hasOwnProperty('label')){
+                var nodeLabel = node.label;
+                if(nodeLabel.hasOwnProperty('color')){
+                    newConfig.node.label.color = nodeLabel.color;
+                }
+                if(nodeLabel.hasOwnProperty('show')){
+                    newConfig.node.label.show = nodeLabel.show;
+                }
+                if(nodeLabel.hasOwnProperty('font')){
+                    newConfig.node.label.font = nodeLabel.font;
+                }
+                if(nodeLabel.hasOwnProperty('wrapText')){
+                    newConfig.node.label.wrapText = nodeLabel.wrapText;
+                }
+                if(nodeLabel.hasOwnProperty('textPosition')){
+                    newConfig.node.label.textPosition = nodeLabel.textPosition;
+                }
+            }
+            if(node.hasOwnProperty('shape')){
+                newConfig.node.shape = node.shape;
+            }
+            if(node.hasOwnProperty('color')){
+                newConfig.node.color = node.color;
+            }
+            if(node.hasOwnProperty('borderColor')){
+                newConfig.node.borderColor = node.borderColor;
+            }
+            if(node.hasOwnProperty('borderWidth')){
+                newConfig.node.borderWidth = node.borderWidth;
+            }
+            if(node.hasOwnProperty('lineDash')){
+                newConfig.node.lineDash = node.lineDash;
+            }
+            if(node.hasOwnProperty('showShadow')){
+                newConfig.node.showShadow = node.showShadow;
+            }
+            if(node.hasOwnProperty('shadowColor')){
+                newConfig.node.shadowColor = node.shadowColor;
+            }
+            if(node.hasOwnProperty('alpha')){
+                newConfig.node.alpha = node.alpha;
+            }
+            if(node.hasOwnProperty('size')){
+                newConfig.node.size = node.size;
+            }
+            if(node.hasOwnProperty('onClick') && typeof node['onClick'] === 'function'){
+                newConfig.node['onClick']=node['onClick'];
+            }
+        }
+        if(config.hasOwnProperty('link')){
+            var link = config.link;
+            if(link.hasOwnProperty('label')){
+                var linkLabel = link.label;
+                if(linkLabel.hasOwnProperty('color')){
+                    newConfig.link.label.color = linkLabel.color;
+                }
+                if(linkLabel.hasOwnProperty('show')){
+                    newConfig.link.label.show = linkLabel.show;
+                }
+                if(linkLabel.hasOwnProperty('font')){
+                    newConfig.link.label.font = linkLabel.font;
+                }
+            }
+            if(link.hasOwnProperty('color')){
+                newConfig.link.color = link.color;
+            }
+            if(link.hasOwnProperty('alpha')){
+                newConfig.link.alpha = link.alpha;
+            }
+            if(link.hasOwnProperty('lineWidth')){
+                newConfig.link.lineWidth = link.lineWidth;
+            }
+            if(link.hasOwnProperty('lineDash')){
+                newConfig.link.lineDash = link.lineDash;
+            }
+            if(link.hasOwnProperty('colorType')){
+                newConfig.link.colorType = link.colorType;
+            }
+            if(link.hasOwnProperty('lineType')){
+                newConfig.link.lineType = link.lineType;
+            }
+            if(link.hasOwnProperty('showArrow')){
+                newConfig.link.showArrow = link.showArrow;
+            }
+            if(link.hasOwnProperty('onClick') && typeof link['onClick'] === 'function'){
+                newConfig.link.onClick=link['onClick'];
+            }
+        }
+        if(config.hasOwnProperty('highLightNeiber')){
+            newConfig.highLightNeiber=config.highLightNeiber;
+        }
+        if(config.hasOwnProperty('backGroundType')){
+            newConfig.backGroundType=config.backGroundType;
+        }
+        if(config.hasOwnProperty('wheelZoom')){
+            newConfig.wheelZoom=config.wheelZoom;
+        }
+        if(config.hasOwnProperty('marginLeft')){
+            newConfig.marginLeft=config.marginLeft;
+        }
+        if(config.hasOwnProperty('rightMenu')){
+            newConfig.rightMenu=config.rightMenu;
+        }
+        return newConfig;
+    };
+
+
+    VisualGraph.prototype.hideAllRightMenu = function(){
       var _self = this;
       if(_self.config.hasOwnProperty('rightMenu')){
           if(_self.config.rightMenu.hasOwnProperty('nodeMenu')){
@@ -2815,29 +2938,10 @@
     }
     this.init();
 
-    var showlabel=false;
-    if(config){
-      if(config['nodeSize']){
-          _self.defaultNodeSize=Number(config['nodeSize'])||35;
-      }
-      if(config['nodeColor']){
-          _self.defaultNodeColor=_self.converHexToRGB(config['nodeColor'])||'10,125,225';
-      }
-      if(config['labelColor']){
-          _self.defaultLabelColor=_self.converHexToRGB(config['labelColor'])||'115,115,115';
-      }
-      if(config['linkColor']){
-        _self.linkColorConfig={
-          linkColorType:config['linkColorType']||1,
-          color:_self.converHexToRGB(config['linkColor'])||'115,115,115'
-        };
-      }
-      showlabel=config['showlabel']||false;
-    }
     var nodeIdMapNode={};
     (data.nodes || []).forEach(function(n,i){
       var node = _self.newNode(n,i);
-      node.showlabel=showlabel;
+      node.showlabel=_self.config.node.label.show;
       _self.scene.add(node);
       _self.nodes.push(node);
       nodeIdMapNode[n.id]=node;
@@ -2868,12 +2972,14 @@
       }
       if(source && target){
         var link = _self.newEdge(source,target);
-        link.showlabel=showlabel;
-        link.colorType='s';
+        link.showlabel= l.showlabel||_self.config.link.label.show;
+        link.colorType= l.colorType||_self.config.link.colorType;
+        link.strokeColor = l.color||_self.config.link.color;
+        link.lineType = l.lineType||_self.config.link.lineType;
         link.type=l.type||'';
         link.label = l.label||l.type||'';
         link.weight = l.weight || 1;
-        link.lineWidth = l.lineWidth || 3;
+        link.lineWidth = l.lineWidth || _self.config.link.lineWidth;
         link.properties=l.properties||{};
         
         _self.scene.add(link);
@@ -2910,18 +3016,23 @@
     node.id = n.id;
     node.type = n.type || 'default';
     node.cluster=n.cluster || 'default';
-    node.radius = Number(n.size) || self.defaultNodeSize;
+    node.radius = Number(n.size) || self.config.node.size;
     node.label = n.label || n.id;
-    node.alpha = n.alpha || 1;
+    node.alpha = n.alpha || self.config.node.alpha;
     node.fillColor = self.getColor(n);
-    node.fontColor = n.fontColor || self.defaultLabelColor;
-    node.textPosition = n.textPosition||'Middle_Center';
-    node.font = '12px yahei';
-    node.borderWidth=n.borderWidth||0;
-    node.borderColor=n.borderColor||node.fillColor;
+    node.fontColor = n.fontColor || self.config.node.label.color;
+    node.textPosition = n.textPosition||self.config.node.label.textPosition;
+    node.font = self.config.node.label.font;
+    node.borderWidth=n.borderWidth||self.config.node.borderWidth;
+    node.borderColor=n.borderColor||self.config.node.borderColor;
     node.scaleX = node.scaleY = n.scale||1;
-    node.shape=n.shape||'circle';
-    node.showlabel=n.showlabel||true;
+    node.shape=n.shape||self.config.node.shape;
+    node.showlabel=n.showlabel||self.config.node.label.show;
+    node.wrapText=self.config.node.label.wrapText;
+    node.showShadow=n.showShadow||self.config.node.showShadow;
+    node.shadowColor=n.shadowColor||self.config.node.shadowColor;
+    node.lineDash=n.lineDash||self.config.node.lineDash;
+
     if(n.image && n.image.length > 0){
       node.setImage(n.image);
     }
@@ -2950,11 +3061,9 @@
         this.dx = this.x;
         this.dy = this.y;
 
-        if(self.config.hasOwnProperty('onNodeClick')){
-            var onNodeClick = self.config['onNodeClick'];
-            if(typeof onNodeClick === 'function'){
-               onNodeClick(event,this);
-            }
+        if(self.config.node.hasOwnProperty('onClick')){
+            var onClick = self.config.node['onClick'];
+            onClick(event,this);
         }
     });
 
@@ -3096,16 +3205,23 @@
   VisualGraph.prototype.newEdge = function(source,target){
     var self = this;
     var link = new DGraph.Edge(source, target, null);
-    link.lineWidth = 1;
-    link.alpha = 0.8;
-    link.showArrow=true;
-    link.lineType='direct';
-    link.strokeColor = self.linkColorConfig.color||'120,120,120';
+    link.lineWidth = self.config.link.lineWidth;
+    link.alpha = self.config.link.alpha;
+    link.strokeColor = self.config.link.color;
+    link.showArrow=self.config.link.showArrow;
+    link.lineType=self.config.link.lineType;
+    link.lineDash=self.config.link.lineDash;
     link.mouseup(function(evt){
       self.currentLink=this;
       if(evt.button == 2){
           self.showLinkRightMenu(evt,this);
       }
+    });
+    link.click(function(event){
+        if(self.config.link.hasOwnProperty('onClick')){
+            var onClick = self.config.link['onClick'];
+            onClick(event,this);
+        }
     });
     return link;
   };
@@ -3135,13 +3251,14 @@
     if(sourceNode && targetNode){
       link = self.newEdge(sourceNode,targetNode);
       link.label=_link.label||'';
-      link.showlabel=true;
-      link.lineWidth=Number(_link.lineWidth)||3;
+      link.showlabel= _link.showlabel||self.config.link.label.show;
+      link.lineWidth=Number(_link.lineWidth)|| self.config.link.lineWidth;
       link.weight=Number(_link.weight)||1;
-      link.lineType=_link.lineType||'direct';
+      link.lineType=_link.lineType||self.config.link.lineType;
+      link.lineDash=_link.lineDash||self.config.link.lineDash;
+      link.font = _link.font||self.config.link.label.font;
+      link.fontColor = _link.fontColor||self.config.link.label.color;
       link.properties=_link.properties||{};
-      link.font = _link.font||'8px yahei';
-      link.fontColor = _link.fontColor||'60,60,60';
 
       self.scene.add(link);
       self.links.push(link);
@@ -3326,7 +3443,7 @@
       this.scene.zFocusEle(node);
       return node;
     }
-    return null
+    return null;
   };
 
   DGraph.Scene.prototype.zFocusEle = function (ele, params, callback) {
@@ -3366,7 +3483,7 @@
 
   VisualGraph.prototype.setLabelColor = function(hexColor){
     var rgbColor = this.converHexToRGB(hexColor);
-    this.defaultLabelColor=rgbColor;
+    this.config.node.label.color=rgbColor;
     this.nodes.forEach(function(node){
       node.fontColor = rgbColor;
     });
@@ -3423,33 +3540,19 @@
 
   VisualGraph.prototype.setLinkColor = function(hexColor){
     var rgbColor = this.converHexToRGB(hexColor);
-    this.linkColorConfig={
-      linkColorType:2,
-      color:rgbColor
-    };
     this.links.forEach(function(link){
-      link.colorType='d';
+      link.colorType='defined';
       link.strokeColor = rgbColor;
     });
   };
 
   VisualGraph.prototype.setLinkColorType = function(type){
-    this.linkColorConfig.linkColorType=type;
-    var linkColorType=null;
-    if(this.linkColorConfig.linkColorType == 0){
-        linkColorType='s';
-      }else if(this.linkColorConfig.linkColorType == 1){
-        linkColorType='t';
-      }else if(this.linkColorConfig.linkColorType == 3){
-        linkColorType='both';
-      }else{
-        linkColorType='d';
-      }
-      var dcolor=this.linkColorConfig.color;
+      var self = this;
+      var linkColorType=type||'source';//source,target,both,d
       this.links.forEach(function(l){
         l.colorType=linkColorType;
-        if(linkColorType=='d'){
-          l.strokeColor = dcolor;
+        if(linkColorType=='defined'){
+          l.strokeColor = self.config.link.color;
         }
       });
   };
@@ -3457,7 +3560,7 @@
   VisualGraph.prototype.setLinkFont = function(fontSize){
     var self = this;
     self.links.forEach(function(l){
-      l.font = fontSize+'px yahei';
+      l.font = fontSize+'px 微软雅黑';
       l.textOffsetX = -Number(fontSize);
     });
   };
@@ -3516,7 +3619,7 @@
       if(color && color.length > 0 && color != '#1f6ce9'){
         line.strokeColor=self.converHexToRGB(color);
         line.fontColor=line.strokeColor;
-        line.colorType=null;
+        line.colorType='defined';
       }
       line.showlabel = true;
     }
@@ -3627,7 +3730,7 @@
       });
 
       if(typeof(LayoutFactory) != 'undefined'){
-        var layout=new LayoutFactory({nodes:virtualNodes,links:null},{'apikey':self.apikey}).createLayout('noverlap');
+        var layout=new LayoutFactory({nodes:virtualNodes,links:null}).createLayout('noverlap');
         if(layout != null){
             layout.initAlgo();
             layout.resetConfig({'maxMove':1});
@@ -4639,7 +4742,7 @@
 
   VisualGraph.prototype.setNodeSize = function(nodeSize){
     nodeSize=Number(nodeSize)||35;
-    this.defaultNodeSize =nodeSize;
+    this.config.node.size=nodeSize;
     this.nodes.forEach(function(node){
       node.radius = Math.round(nodeSize);
     });
@@ -5233,7 +5336,7 @@
 
           link.strokeColor = _link.strokeColor||'100,100,220';
           link.fontColor = _link.fontColor || '100,100,220';
-          link.font = _link.font || '10px yahei';
+          link.font = _link.font || '10px 微软雅黑';
           
           _self.links.push(link);
           _self.scene.add(link);
