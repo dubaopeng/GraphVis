@@ -2669,6 +2669,7 @@
                 shadowColor:'0,255,0',//阴影颜色
                 alpha:1,//节点透明度
                 size:60, //节点默认大小
+                image:null,//节点图标(设置后节点显示为圆形图标)
                 onClick : function(event,node){}//节点点击事件回调
             },
             link:{ //连线的默认配置
@@ -2852,6 +2853,9 @@
             if(node.hasOwnProperty('size')){
                 newConfig.node.size = node.size;
             }
+            if(node.hasOwnProperty('image')){
+                newConfig.node.image = node.image;
+            }
             if(node.hasOwnProperty('onClick') && typeof node['onClick'] === 'function'){
                 newConfig.node['onClick']=node['onClick'];
             }
@@ -2973,6 +2977,8 @@
       if(source && target){
         var link = _self.newEdge(source,target);
         link.showlabel= l.showlabel||_self.config.link.label.show;
+        link.fontColor = l.fontColor || _self.config.link.label.color;
+        link.font = l.font || _self.config.link.label.font;
         link.colorType= l.colorType||_self.config.link.colorType;
         link.strokeColor = l.color||_self.config.link.color;
         link.lineType = l.lineType||_self.config.link.lineType;
@@ -3035,6 +3041,8 @@
 
     if(n.image && n.image.length > 0){
       node.setImage(n.image);
+    }else{
+       node.setImage(self.config.node.image||'');
     }
     node.properties=n.properties||{};
     self.setTypeMapWithNode(node);
@@ -3211,6 +3219,7 @@
     link.showArrow=self.config.link.showArrow;
     link.lineType=self.config.link.lineType;
     link.lineDash=self.config.link.lineDash;
+    link.fontColor=self.config.link.label.color;
     link.mouseup(function(evt){
       self.currentLink=this;
       if(evt.button == 2){
@@ -5334,9 +5343,9 @@
           link.type = _link.type;
           link.weight = _link.weight||1;
 
-          link.strokeColor = _link.strokeColor||'100,100,220';
-          link.fontColor = _link.fontColor || '100,100,220';
-          link.font = _link.font || '10px 微软雅黑';
+          link.strokeColor = _link.strokeColor||_self.config.link.color;
+          link.fontColor = _link.fontColor || _self.config.link.label.color;
+          link.font = _link.font || _self.config.link.font;
           
           _self.links.push(link);
           _self.scene.add(link);

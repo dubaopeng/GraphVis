@@ -76,11 +76,12 @@ function initVisGraph(visDomId){
                 label:{ //标签配置
                     show:true, //是否显示
                     color:'50,50,50',//字体颜色
-                    font:'12px 微软雅黑',//字体大小及类型
+                    font:'14px 微软雅黑',//字体大小及类型
                     wrapText:false, //节点包裹文字
                     textPosition:'Middle_Center'//文字位置 Top_Center,Bottom_Center,Middle_Right
                 },
                 shape:'circle',//节点形状 circle,rect,ellipse,triangle,star,polygon,text
+                //image:'images/T1030001.svg',//节点图标(设置后节点显示为圆形图标)
                 color:'20,20,200',//节点颜色
 				borderColor:'10,255,10',//边框颜色
 				borderWidth:0,//边框宽度,
@@ -96,15 +97,15 @@ function initVisGraph(visDomId){
             },
             link:{ //连线的默认配置
                 label:{ //连线标签
-                    show:false, //是否显示
-                    color:'20,20,20', //字体颜色
-                    font:'11px 微软雅黑'//字体大小及类型
+                    show:true, //是否显示
+                    color:'255,0,0', //字体颜色
+                    font:'12px 微软雅黑'//字体大小及类型
                 },
 				lineType:'direct',//连线类型,direct,curver,vlink,hlink,bezier,vbezier,hbezier
                 colorType:'defined',//连线颜色类型 source:继承source颜色,target:继承target颜色 both:用双边颜色，defined:自定义
                 color:'180,180,180', //连线颜色
                 alpha:1,  // 连线透明度
-                lineWidth:5, //连线宽度
+                lineWidth:6, //连线宽度
 				lineDash:[0],//虚线间隔样式如：[5,8]
 				showArrow:true,//显示箭头
                 onClick :function(event,link){ //连线点击事件回调
@@ -146,13 +147,21 @@ function definedGraphStyle(){
 		if((inDegree + outDegree) > 5){
 			//node.showlabel=true;  //显示点的标签
 			//node.selected=true;   //显示选中样式
-			//node.borderColor=node.fillColor;//边框颜色
-            node.borderColor=randomColor();
-			node.borderWidth=5; //增加边框
+			//node.borderColor=node.fillColor;//边框颜色使用自身颜色
 			node.lineDash=[3,2]; //边框虚线
 			node.setImage('images/T1030001.svg');//设置图片路径
+			node.textPosition='Bottom_Center';//标签位置
+			node.font='50px 微软雅黑';//设置字体格式
+			node.borderWidth=20;//增加边框
+			node.borderColor=randomColor();//随机边框颜色
+			node.showShadow=true;
+			node.shadowColor=randomColor();//显示选中阴影
+
+			node.radius=150;//设置节点大小
+			node.scaleX=1;//缩放比例
+			node.scaleY=1;//缩放比例
 		}
-		node.font='14px 微软雅黑'; //字体大小 类型
+		//node.font='14px 微软雅黑'; //字体大小 类型
 		//node.fontColor='50,50,50'; //点的字体颜色
 		//node.textPosition='Bottom_Center'; //字体位置（下方居中）
 		//node.scaleX=1;//缩放比例
@@ -164,16 +173,16 @@ function definedGraphStyle(){
 
 
 	//设置边的可视化样式
-	var links = gdata.links; //获取所有边
+	/*var links = gdata.links; //获取所有边
 	links.forEach(function(link){
-	    //link.showlabel=true; //显示连线的标签
+	    link.showlabel=true; //显示连线的标签
 	    link.fontColor='50,50,50';//设置边的标签颜色
 	    link.font='14px 微软雅黑';//设置连线的粗细
 
-	    //link.lineWidth=3;//设置连线的粗细
-	    //link.colorType='defined'; //连线的颜色继承源节点
-	    //link.strokeColor='115,115,115'; //设置边的颜色
-	});
+	    link.lineWidth=3;//设置连线的粗细
+	    link.colorType='defined'; //连线的颜色继承源节点
+	    link.strokeColor='115,115,115'; //设置边的颜色
+	});*/
 };
 
 //自定义布局算法

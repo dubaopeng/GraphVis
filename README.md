@@ -6,7 +6,7 @@
 
 开发文档：[组件开发文档](http://www.graphvis.cn/graph/dev-doc/index.html)（完善中...）
 
-Gitee:[码云项目地址](https://gitee.com/baopengdu/GraphVis)
+GitHub:[GitHub地址](https://github.com/dubaopeng/GraphVis)
 
 ### 项目核心价值
 1. 快速高效的可视化引擎，支持大量数据的交互式操作。
@@ -41,7 +41,7 @@ var data = {
    nodes:[{id:'1',label:'刘备',type:'男',properties:{age:50}},
          {id:'2',label:'关羽',type:'男'},
          {id:'3',label:'张飞',type:'男'}],
-   links:[{source:'1',target:'2',label:'二弟'},
+   links:[{source:'1',target:'2',label:'二弟',properties:{other:'other prop'}},
          {source:'1',target:'3',label:'三弟'}]
 };
 
@@ -49,7 +49,7 @@ var data = {
 <div id="graph-panel" style="width:800px;height:600px;"></div>
 
 3、初始化关系图
-let visGraph = new VisGraph(document.getElementById(’graph-panel‘));
+let visGraph = new VisGraph(document.getElementById('graph-panel'));
 visgraph.drawData(data);//绘制图完成
 
 ```
@@ -69,6 +69,7 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
             },
             shape:'circle',//节点形状 circle,rect,ellipse,triangle,star,polygon,text
             color:'20,20,200',//节点颜色
+            //image:'images/T1030001.svg',//节点图标(设置后节点显示为圆形图标)
             borderColor:'255,255,20',//边框颜色
             borderWidth:0,//边框宽度,
             lineDash:[3,2],//边框虚线间隔,borderWidth>0时生效
@@ -111,15 +112,17 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
 );
 ```
 
-## 应用效果截图
+## 应用效果图
 ![复杂网络可视化效果2](http://media.graphvis.cn/20200614023608.png)
 ![图谱应用1](http://media.graphvis.cn/tupuvis.png)
-![图谱应用2](http://media.graphvis.cn/zishitupu.png)
 ![复杂网络可视化效果](http://media.graphvis.cn/second2.png)
-![网络拓扑结构](http://media.graphvis.cn/three-scnece-bg.png)
 ![网络拓扑结构](http://media.graphvis.cn/secondbg.png)
 
 ## GraphVis 交流讨论
 <img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" align=center />
-<img src="http://media.graphvis.cn/20200614023006.jpg" width = "180" height = "300" alt="" align=center />
+<img src="http://media.graphvis.cn/20200702195334.jpg" width = "180" height = "300" alt="" align=center />
 
+## 联系我
+1、微信：dubaopeng123
+2、QQ: 583037838
+3、邮箱：dubaopeng@126.com
