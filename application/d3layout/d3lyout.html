@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GraphVis-开发示例</title>
+    <link rel="stylesheet" href="style/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="style/bootstrap/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div id="graph-panel" class="wrapper-panel">
+    </div>
+
+    <div class="left-toolbar">
+        <ul id="left-tool-btns">
+            <li type="zoom" method="zoomOut" title="放大"><i class="fa fa-plus-circle"></i></li>
+            <li type="zoom" method="zoomIn" title="缩小"><i class="fa fa-minus-circle"></i></li>
+            <li type="zoom" method="zoom1" title="1:1"><i class="fa fa-arrows-h"></i></li>
+            <li type="zoom" method="auto" title="居中" class="end"><i class="fa fa-support"></i></li>
+            <li type="coordi" method="zoomOut" title="坐标放大"><i class="fa fa-search-plus"></i></li>
+            <li type="coordi" method="zoomIn" title="坐标缩小"><i class="fa fa-search-minus"></i></li>
+            <li type="coordi" method="east" title="顺时针旋转"><i class="fa  fa-undo"></i></li>
+            <li type="coordi" method="west" title="逆时针旋转" class="end"><i class="fa fa-repeat"></i></li>
+            <li type="mode" method="normal" title="正常模式" class="active"><i class="fa fa-mouse-pointer"></i></li>
+            <li type="mode" method="select" title="框选模式"><i class="fa fa-crop"></i></li>
+            <li type="mode" method="drag" title="拖拽模式" class="end"><i class="fa fa-arrows"></i></li>
+            <li type="saveImage" method="saveImage" title="保存图片"><i class="fa fa-save"></i></li>
+            <li type="eyeview" method="eyeview" title="缩略图"><i class="fa fa-eye"></i></li>
+        </ul>
+    </div>
+
+    <div class="right-side">
+        <div id="side-bar-btn" class="side-bar-btn right">
+            <a href="javascript:void(0);"><i class="fa fa-arrow-circle-right"></i><a>
+        </div>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-info">
+                <div class="panel-heading " role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            布局算法
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div id="layout-panel"></div>
+                        <div class="params-warp">
+                            <textarea id="layout-params" style="resize:none;width:100%;height:200px;">
+                            </textarea>
+                        </div>
+                        <div style="margin-top:5px;text-align: center;">
+                            <button id="runLayotBtn" type="button" class="btn btn-sm btn-success" style="width:100%;">
+                                <i class="fa fa-play"></i>&nbsp;运行布局
+                            </button>
+                        </div>
+
+                        <div class="tiptext">
+                            注：选择对应布局算法后，可以【运行布局】对图数据进行可视化视觉调整，当布局效果达到预期时，可以【停止布局】进行其他操作。
+                            在布局过程中，还可以修改算法参数，点击【应用】以实时调整可视化效果。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            显示设置
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body">
+                        <table id="cluster-params" class="small-table">
+                            <tr>
+                                <td>节点形状</td>
+                                <td>
+                                    <select id="node-shape" class="small-selector param">
+                                        <option value="circle">圆形</option>
+                                        <option value="rect">正方形</option>
+                                        <option value="ellipse">椭圆</option>
+                                        <option value="triangle">三角形</option>
+                                        <option value="star">五角星</option>
+                                        <option value="polygon">六边形</option>
+                                        <option value="text">文字</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>节点标签</td>
+                                <td>
+                                    <select id="node-label" class="small-selector param">
+                                        <option value="false">不显示</option>
+                                        <option value="true">显示</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>标签包裹</td>
+                                <td>
+                                    <select id="node-label-wrap" class="small-selector param">
+                                        <option value="false">否</option>
+                                        <option value="true">是</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>标签位置</td>
+                                <td>
+                                    <select id="node-label-pos" class="small-selector param">
+                                        <option value="Bottom_Center">底部</option>
+                                        <option value="Middle_Center">居中</option>
+                                        <option value="Top_Center">顶部</option>
+                                        <option value="Middle_Right">右边</option>
+                                        <option value="Middle_Left">左边</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>连线类型</td>
+                                <td>
+                                    <select id="link-type" class="small-selector param">
+                                        <option value="direct">直线</option>
+                                        <option value="curver">曲线</option>
+                                        <option value="vdirect">直虚线</option>
+                                        <option value="vcurver">曲虚线</option>
+                                        <option value="vlink">纵向折线</option>
+                                        <option value="hlink">横向折线</option>
+                                        <option value="vbezier">纵向曲线</option>
+                                        <option value="hbezier">横向曲线</option>
+                                        <option value="bezier">贝塞尔曲线</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>连线样式</td>
+                                <td>
+                                    <select id="link-dashed" class="small-selector param">
+                                        <option value="false">实线</option>
+                                        <option value="true">虚线</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>连线标签</td>
+                                <td>
+                                    <select id="link-label" class="small-selector param">
+                                        <option value="true">显示</option>
+                                        <option value="false">不显示</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>连线箭头</td>
+                                <td>
+                                    <select id="link-arrow" class="small-selector param">
+                                        <option value="true">显示</option>
+                                        <option value="false">不显示</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingFour">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            示例数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                    <div class="panel-body">
+                        <div class="params-warp">
+                            <table id="demo-datas" class="small-table">
+                                <tr>
+                                    <td>红楼梦关系网络</td>
+                                    <td>
+                                       <a href="javascript:;" data-type="data1" class="demo-data" >选择</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>树形关系数据</td>
+                                    <td>
+                                        <a href="javascript:;" data-type="data2" class="demo-data" >选择</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingFive">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            动态数据演示
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                    <div class="panel-body">
+                        <div class="params-warp">
+                            <table id="demo-datas" class="small-table">
+                                <tr>
+                                    <td>父节点数</td>
+                                    <td>
+                                        <select id="nodeCount" class="small-selector param">
+                                            <option value="5">5</option>
+                                            <option value="8">8</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>子节点数</td>
+                                    <td>
+                                        <select id="childCount" class="small-selector param">
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="longbtn">
+                            <button id="interactiveBtn" type="button" class="btn btn-sm btn-success" style="width: 100%;;">
+                                <i class="fa fa-play"></i>&nbsp;生成图数据
+                            </button>
+                        </div>
+                        <div class="tiptext">
+                            注：随机生成指定的节点和关系，可以双击节点进行数据查询，动态追加数据并布局
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingSix">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            常用操作演示
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                    <div class="panel-body">
+                        <div class="params-warp">
+                            <table id="demo-datas" class="small-table">
+                                <tr>
+                                    <td>添加连线</td>
+                                    <td>
+                                        <a id="addLink" href="javascript:;">开始添加</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>删除选中节点</td>
+                                    <td>
+                                        <a id="delnode" href="javascript:;">删除</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>删除选中连线</td>
+                                    <td>
+                                        <a id="dellink" href="javascript:;">删除</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>节点操作</td>
+                                    <td>
+                                        <select id="nodeopts" class="small-selector param">
+                                            <option value="">--请选择--</option>
+                                            <option value="selectAll">全选</option>
+                                            <option value="reverseSelect">反选</option>
+                                            <option value="showSelected">显示选中</option>
+                                            <option value="hideSelected">隐藏选中</option>
+                                            <option value="showNodes">显示全部</option>
+                                            <option value="delSelect">删除选中</option>
+                                            <option value="selectRelate">选中关联</option>
+                                            <option value="hideIsolatedNodes">隐藏孤立点</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>连线操作</td>
+                                    <td>
+                                        <select id="linkopts" class="small-selector param">
+                                            <option value="">--请选择--</option>
+                                            <option value="showAllLink">显示连线</option>
+                                            <option value="hideAllLink">隐藏连线</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+  
+                    </div>
+                </div> 
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingSenven">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSenven" aria-expanded="false" aria-controls="collapseSenven">
+                           查找节点
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseSenven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSenven">
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input id="nodeName" type="text" class="form-control input-md">
+                            <span id="searchNode" class="input-group-addon btn btn-success">搜索</span>
+                        </div>
+                        <div>
+                            <textarea id="nodeInfo"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingEight">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                            查找路径
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input id="soureNode" type="text" placeholder="输入起始节点名称" class="form-control input-md">
+                        </div>
+                        <div class="input-group">
+                            <input id="targetNode" type="text" placeholder="输入目标节点名称" class="form-control input-md">
+                        </div>
+                        <div class="input-group">
+                            <button id="findPath" type="button" class="btn btn-sm btn-success" style="width:200px;">
+                                <i class="fa fa-search"></i>&nbsp;开始查找
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" src="js/jquery.min.js" ></script>
+<script type="text/javascript" src="style/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/d3.v5.min.js?v=20200620"></script>
+<script type="text/javascript" src="js/visgraph.min.js?v=20200620"></script>
+<script type="text/javascript" src="js/app.js?v=20200620"></script>
+</html>
