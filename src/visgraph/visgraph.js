@@ -1,5 +1,5 @@
 /*
- * GraphVis v1.0.0.20200608
+ * GraphVis v1.0.0.20200705
  * 图数据可视化展示、分析组件，集成常见的经典布局算法，社区划分算法，高效、易用、可扩展！
  * Copyright (c) 2020 dubaopeng http://www.graphvis.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/MIT )
@@ -2670,7 +2670,8 @@
                 alpha:1,//节点透明度
                 size:60, //节点默认大小
                 image:null,//节点图标(设置后节点显示为圆形图标)
-                onClick : function(event,node){}//节点点击事件回调
+                onClick : function(event,node){},//节点点击事件回调
+                onMousedrag:function(event,node){}
             },
             link:{ //连线的默认配置
                 label:{ //连线标签
@@ -2690,7 +2691,7 @@
             highLightNeiber:true, //相邻节点高度标志
             backGroundType:'png',//保存图片的类型，支持png、jpeg
             wheelZoom:1,//滚轮缩放开关，不使用时不设置
-            marginLeft:0
+            marginLeft:0.1
         };
         this.config = this.mergeConfig(config,this.defaultConfig);
 
@@ -2777,11 +2778,9 @@
                 _self.virLink=virLink;
                 _self.scene.add(_self.virLink);
               }
-              var position = {x:event.pageX-(_self.config.marginLeft||0),y:event.pageY-(_self.config.marginTop||0)};
-              var p = _self.scene.toSceneEvent(position);
-
-              _self.virNode.x=p.x*pixelRatio;
-              _self.virNode.y=p.y*pixelRatio;
+              var p = DGraph.util.mouseCoords(e);
+              _self.virNode.x=p.x;
+              _self.virNode.y=p.y;
             }
         });
 
@@ -2859,6 +2858,9 @@
             if(node.hasOwnProperty('onClick') && typeof node['onClick'] === 'function'){
                 newConfig.node['onClick']=node['onClick'];
             }
+            if(node.hasOwnProperty('onMousedrag') && typeof node['onMousedrag'] === 'function'){
+                newConfig.node['onMousedrag']=node['onMousedrag'];
+            }
         }
         if(config.hasOwnProperty('link')){
             var link = config.link;
@@ -2935,7 +2937,7 @@
       }
   };
 
-  VisualGraph.prototype.drawData = function(data,config){
+  VisualGraph.prototype.drawData = function(data){
     var _self = this;
     if(data == null){
       return;
@@ -3117,6 +3119,11 @@
               }
             });
           }
+        }
+
+        if(self.config.node.hasOwnProperty('onMousedrag')){
+            var onMousedrag = self.config.node['onMousedrag'];
+            onMousedrag(event,this);
         }
       });
 
@@ -3582,7 +3589,7 @@
     });
   };
 
-  VisualGraph.prototype.findNode = function(text,showNodeInfoFlag){
+  VisualGraph.prototype.findNode = function(text){
     var nodes = this.nodes.filter(function(n){
       if(n.label == null) return false;
       var label = n.label+'';
@@ -4765,23 +4772,29 @@
     });
   };
 
-  VisualGraph.prototype.addNodeForDrag = function(_node,position){
+  VisualGraph.prototype.covertSencePoint = function(event){
+    return DGraph.util.mouseCoords(event);
+  };
+
+  VisualGraph.prototype.addNodeForDrag = function(_node){
     var self = this;
-    var flag = false;
-    if(!flag){
-      position = self.scene.toSceneEvent(position);
-
+    var node;
+    self.scene.removeEventListener('mouseover');
+    self.scene.addEventListener('mouseover',function(event){
+      var p = DGraph.util.mouseCoords(event);
       _node.id = (_node.id==null?self.nodeIdIndex++ : _node.id);
-      _node.x=position.x;
-      _node.y=position.y;
+      _node.x=p.x;
+      _node.y=p.y;
 
-      var node = self.newNode(_node);
+      node = self.newNode(_node);
       node.fixed = true;
+
       self.nodes.push(node);
       self.scene.add(node);
-      return node;
-    }
-    return null;
+
+      self.scene.removeEventListener('mouseover');
+    });
+    return node;
   };
 
   VisualGraph.prototype.showAll = function(){
@@ -5339,10 +5352,10 @@
           var link = _self.newEdge(sourceNode,targetNode);
           link.label = _link.label||_link.type||'';
           link.text=link.label;
-          link.showlabel=true;
           link.type = _link.type;
           link.weight = _link.weight||1;
 
+          link.showlabel=_link.showlabel||_self.config.link.label.show;
           link.strokeColor = _link.strokeColor||_self.config.link.color;
           link.fontColor = _link.fontColor || _self.config.link.label.color;
           link.font = _link.font || _self.config.link.font;
@@ -5694,6 +5707,22 @@
       this.scene.addToSelected(node);
       this.scene.zFocusEle(node);
     }
+  };
+
+  VisualGraph.prototype.updateNodeLabel = function(nodeId,nodeName){
+    this.nodes.forEach(function(n){
+        if(n.id == nodeId){
+           n.label = nodeName;
+        }
+    });
+  };
+
+  VisualGraph.prototype.updateNodeLabel = function(nodeId,nodeName){
+    this.nodes.forEach(function(n){
+        if(n.id == nodeId){
+           n.label = nodeName;
+        }
+    });
   };
 
 
