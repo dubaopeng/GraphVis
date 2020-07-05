@@ -273,25 +273,34 @@ function runLayout(){
 	let _graph =visgraph.getVisibleData();
 
 	var _nodes = _graph.nodes;
-	var _links = _graph.links.map(function (l) {
+	/*var _links = _graph.links.map(function (l) {
 		return {
 			id:l.id,
 			source:l.source.id,
 			target:l.target.id
 		};
+	});*/
+	var _links = [];
+	_graph.links.forEach(function(l,index){
+		_links.push({
+			id:index+1,
+			source: _nodes.indexOf(l.source),
+			target: _nodes.indexOf(l.target)
+		});
 	});
 
     simulation = d3.forceSimulation();
     simulation.force("charge", d3.forceManyBody()
-            .strength(parameters.charge.strength)
-			.distanceMin(parameters.charge.distanceMin)
-			.distanceMax(parameters.charge.distanceMax))
+	            .strength(parameters.charge.strength)
+				.distanceMin(parameters.charge.distanceMin)
+				.distanceMax(parameters.charge.distanceMax)
+			)
 			.force("link",d3.forceLink().strength(parameters.link.strength))
 			.force("center", d3.forceCenter(parameters.center.x,parameters.center.y))
 			.force("collide",d3.forceCollide().radius(parameters.collision.radius)
-			.strength(parameters.collision.strength));
+			.strength(parameters.collision.strength))
+			.alphaMin(parameters.alpha.alphaMin);
 
-    simulation.alphaMin(parameters.alpha.alphaMin);
     setData();
     start();
 
@@ -307,14 +316,18 @@ function runLayout(){
     }
 
     function setData(){
-        simulation.nodes(_nodes)
-		.on("tick", () => ticked())
-		.on("end", () => ended());
+        simulation.nodes(_nodes);
+		//.on("tick", () => ticked())
+		//.on("end", () => ended());
 
-        simulation.force("link",d3.forceLink()
-            .distance(function(d) {return Math.random()*100;})
-            .id((d) => {return d.id;})
-            .links(_links));
+        simulation.force("link")
+        	.links(_links)
+            .distance(function(d) {return Math.random()*200;})
+            .id((d) => {return d.id;});
+
+        /*simulation.force("center")
+        .x(visgraph.canvas.width/2)
+        .y(visgraph.canvas.height/2);*/
     }
 
     function ticked(){
@@ -323,7 +336,7 @@ function runLayout(){
     }
 
     function ended(){
-        stopLayout();
+        //stopLayout();
 		console.log('end');
     }
 };
@@ -331,7 +344,7 @@ function runLayout(){
 //停止布局算法，保持静止
 function stopLayout(){
     simulation.alpha(0);
-	visgraph.translateToCenter(); //可视化数据居中展示
+	//visgraph.translateToCenter(); //可视化数据居中展示
 };
 
 
@@ -549,20 +562,7 @@ function mockInteractiveData(){
 				edge.showArrow=true;//显示箭头
 			}
 		}
-
-		autoLayout(); //自动布局，调整效果
 		visgraph.moveCenter();//移动到可视化中心
-	};
-
-	//自动布局
-	function autoLayout(){
-		var layout=new LayoutFactory(visgraph.getVisibleData()).createLayout("fastFR");
-    	layout.initAlgo();
-
-    	let i=0;
-    	while(i++ < 300){
-    		layout.runLayout(); //执行300次布局算法，调整显示效果
-    	}
 	};
 
 
