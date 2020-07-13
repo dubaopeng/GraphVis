@@ -67,7 +67,7 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
                 wrapText:false, //节点包裹文字
                 textPosition:'Middle_Center'//文字位置 Top_Center,Bottom_Center,Middle_Right
             },
-            shape:'circle',//节点形状 circle,rect,ellipse,triangle,star,polygon,text
+            shape:'circle',//节点形状 circle,rect,square,ellipse,triangle,star,polygon,text
             color:'20,20,200',//节点颜色
             //image:'images/T1030001.svg',//节点图标(设置后节点显示为圆形图标)
             borderColor:'255,255,20',//边框颜色
@@ -77,6 +77,8 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
             shadowColor:'0,255,0',//阴影颜色
             alpha:1,//节点透明度
             size:60, //节点默认大小
+            width:80, //节点的长度(shape为rect生效)
+            height:40,//节点的高度(shape为rect生效)
             onClick : function(event,node){ //节点点击事件回调
                 // do something
                 console.log('click node----['+node.id+':'+node.label+']');
@@ -113,16 +115,26 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
 ```
 
 ## 应用效果图
-![复杂网络可视化效果2](http://media.graphvis.cn/20200614023608.png)
-![图谱应用1](http://media.graphvis.cn/tupuvis.png)
-![复杂网络可视化效果](http://media.graphvis.cn/second2.png)
-![网络拓扑结构](http://media.graphvis.cn/secondbg.png)
+
+<table style="width:600px;">
+<tr>
+<td> <img src="http://media.graphvis.cn/20200614023608.png" width = "300" alt="" align=center /> </td>
+<td><img src="http://media.graphvis.cn/tupuvis.png" width = "300" alt="" align=center /></td>
+</tr>
+<tr>
+<td> <img src="http://media.graphvis.cn/second2.png" width = "300" alt="" align=center /> </td>
+<td><img src="http://media.graphvis.cn/secondbg.png" width = "300" alt="" align=center /></td>
+</tr>
+</table>
 
 ## GraphVis 交流讨论
-<img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" align=center />
-<img src="http://media.graphvis.cn/20200702195334.jpg" width = "180" height = "300" alt="" align=center />
+<table style="width:400px;">
+<tr>
+<td><img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" align=center /></td>
+<td><img src="http://media.graphvis.cn/mmqrcode1594653849408.png" width = "180" height = "300" alt="" align=center /></td>
+</tr>
+</table>
 
-## 联系我
+## 联系作者
 1、微信：dubaopeng123
 2、QQ: 583037838
-3、邮箱：dubaopeng@126.com

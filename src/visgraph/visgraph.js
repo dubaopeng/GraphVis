@@ -1,5 +1,5 @@
 /*
- * GraphVis v1.0.0.20200705
+ * GraphVis v1.0.0.20200713
  * 图数据可视化展示、分析组件，集成常见的经典布局算法，社区划分算法，高效、易用、可扩展！
  * Copyright (c) 2020 dubaopeng http://www.graphvis.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/MIT )
@@ -1180,7 +1180,11 @@
                   if(this.image){
                       a.lineWidth = this.borderWidth;
                       a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+(this.alpha)+')';
-                      a.arc(0,0,this.width/2, 0, 2*Math.PI,true);
+                      if(this.shape == 'rect'){
+                        a.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+                      }else{
+                        a.arc(0,0,this.width/2, 0, 2*Math.PI,true);
+                      }
                   }else{
                       a.lineWidth = this.borderWidth+5;
                       a.strokeStyle = 'rgba('+(this.borderColor||this.fillColor)+','+(this.alpha*0.8)+')';
@@ -1348,26 +1352,38 @@
               this.inLinks = null, 
               this.outLinks = null;
               this.radius = 50;
-              this.width = this.height = this.radius;
+              this.width=40;
+              this.height=80;
+              if(this.shape != 'rect'){
+                this.width = this.height = this.radius;
+              }
               var d = "text,font,fontColor,textPosition,textOffsetX,textOffsetY,borderRadius".split(",");
               this.serializedProperties = this.serializedProperties.concat(d)
           }, 
           this.initialize(c),
-          this.circleImg = function (ctx, img, x, y, r) {
-              var d =2 * r;
-              var cx = x + r,cy = y + r;
-              ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-              ctx.clip();
-              ctx.drawImage(img, x, y, d, d);
+          this.drawNodeImg = function (ctx, img, x, y, r) {
+              if(this.shape == 'rect'){
+                ctx.drawImage(img, x, y, this.width, this.height);
+              }else{
+                var d =2 * r;
+                var cx = x + r,cy = y + r;
+
+                ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+                ctx.clip();
+                ctx.drawImage(img, x, y, d, d);
+              }
           },
           this.paint = function (a) {
-              this.width = this.height = this.radius;
+              if(this.shape != 'rect'){
+                  this.width = this.height = this.radius;
+              }
+
               if (this.image) {
                   this.paintBorder(a);
                   var b = a.globalAlpha;
                   a.save();
                   a.globalAlpha = this.alpha;
-                  this.circleImg(a,this.image,-this.width/2, -this.height/2,this.width/2);
+                  this.drawNodeImg(a,this.image,-this.width/2, -this.height/2,this.width/2);
                   a.globalAlpha = b;
                   a.restore();
               } else {
@@ -1401,6 +1417,9 @@
           this.paintShape = function(a){
               switch(this.shape){
                   case 'rect':
+                      a.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+                      break;
+                  case 'square':
                       a.rect(-this.width / 2, -this.height / 2, this.width, this.height);
                       break;
                   case 'ellipse':
@@ -1533,26 +1552,33 @@
           this.paintBorder = function (a) {
             a.save(),
             a.beginPath();
-            if(this.selected){
+            if(this.showShadow && this.selected){
               a.shadowBlur = 20,
               a.shadowColor = "rgba(" +this.shadowColor + ","+(this.alpha)+ ")",
               a.shadowOffsetX = 0, 
               a.shadowOffsetY = 0;
             }
-            a.arc(0,0,this.width/2,0,Math.PI*2,false);
-            a.closePath();
 
             if(this.borderWidth > 0){
-                if(this.lineDash && this.lineDash.length > 1){
-                    a.setLineDash(this.lineDash);//边框虚线样式
-                }
-                a.lineWidth=this.borderWidth;
-                a.strokeStyle="rgba(" +(this.borderColor||this.fillColor) + ","+(this.alpha*0.8)+ ")";
-                a.stroke();
+              if(this.shape == 'rect'){
+                a.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+              }else{
+                a.arc(0,0,this.width/2,0,Math.PI*2,false);
+              }
+              
+              a.closePath();
+
+              if(this.lineDash && this.lineDash.length > 1){
+                  a.setLineDash(this.lineDash);//边框虚线样式
+              }
+              a.lineWidth=this.borderWidth;
+              a.strokeStyle="rgba(" +(this.borderColor||this.fillColor) + ","+(this.alpha*0.8)+ ")";
+              a.stroke();
+
+              a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
+              //this.paintShadow(a);
+              a.fill();
             }
-            a.fillStyle="rgba("+this.fillColor+","+this.alpha+")";
-            //this.paintShadow(a);
-            a.fill();
             a.restore();
           },
           this.transformContentToMultiLineText = function(ctx,text,contentWidth,lineNumber){
@@ -2166,37 +2192,43 @@
           },
 
           this.paintDrirectLineArrow = function(b){
-              var c = {x:this.source.cx, y:this.source.cy}, d = {x:this.target.cx, y:this.target.cy};
-              this.arrowsOffset = -this.target.radius/2 * this.target.scaleX;
+              var c,d;
+              if(this.target.shape=='rect'){
+                var cod = this.getPath();
+                c = cod[0], d = cod[1];
+              }else{
+                c = {x:this.source.cx, y:this.source.cy}, d = {x:this.target.cx, y:this.target.cy};
+                this.arrowsOffset = -this.target.radius/2 * this.target.scaleX;
+              }
               this.arrowsRadius = this.getArrowRadius();
               var e = this.arrowsOffset, 
-              f = this.arrowsRadius / 2, 
-              g = c, 
-              h = d, 
-              i = Math.atan2(h.y - g.y, h.x - g.x), 
-              j = Math.sqrt((g.x - h.x) * (g.x - h.x) + (g.y - h.y) * (g.y - h.y)) - this.arrowsRadius, 
-              k = g.x + (j + e) * Math.cos(i), 
-              l = g.y + (j + e) * Math.sin(i), 
-              m = h.x + e * Math.cos(i), 
-              n = h.y + e * Math.sin(i);
-              i -= Math.PI / 2;
+                  f = this.arrowsRadius / 2, 
+                  g = c, 
+                  h = d, 
+                  i = Math.atan2(h.y - g.y, h.x - g.x), 
+                  j = DGraph.util.getDistance(g, h) - this.arrowsRadius, 
+                  k = g.x + (j + e) * Math.cos(i), 
+                  l = g.y + (j + e) * Math.sin(i), 
+                  m = h.x + e * Math.cos(i), 
+                  n = h.y + e * Math.sin(i);
+                  i -= Math.PI / 2;
               var o = {x: k + f * Math.cos(i), y: l + f * Math.sin(i)}, 
-              p = {
-                  x: k + f * Math.cos(i - Math.PI),
-                  y: l + f * Math.sin(i - Math.PI)
-              };
+                  p = {
+                      x: k + f * Math.cos(i - Math.PI),
+                      y: l + f * Math.sin(i - Math.PI)
+                  };
               b.beginPath(), 
               b.fillStyle = "rgba(" + this.strokeColor + "," + this.alpha + ")", 
               b.moveTo(o.x, o.y), 
               b.lineTo(m, n), 
               b.lineTo(p.x, p.y),
               b.fill(),
-              b.closePath()
+              b.closePath();
           },
 
           this.getArrowRadius = function(){
-              var raduis = 4*this.lineWidth;
-              return Math.min(raduis,50);
+              var raduis = 3*this.lineWidth;
+              return Math.min(raduis,60);
           },
 
           this.paintSpecialArrow = function(b,sourceP,targetP){
@@ -2669,6 +2701,8 @@
                 shadowColor:'0,255,0',//阴影颜色
                 alpha:1,//节点透明度
                 size:60, //节点默认大小
+                width:100,//节点的长度(shape为rect生效)
+                height:40,//节点的高度(shape为rect生效)
                 image:null,//节点图标(设置后节点显示为圆形图标)
                 onClick : function(event,node){},//节点点击事件回调
                 onMousedrag:function(event,node){}
@@ -2852,6 +2886,12 @@
             if(node.hasOwnProperty('size')){
                 newConfig.node.size = node.size;
             }
+            if(node.hasOwnProperty('width')){
+                newConfig.node.width = node.width;
+            }
+            if(node.hasOwnProperty('height')){
+                newConfig.node.height = node.height;
+            }
             if(node.hasOwnProperty('image')){
                 newConfig.node.image = node.image;
             }
@@ -3025,6 +3065,8 @@
     node.type = n.type || 'default';
     node.cluster=n.cluster || 'default';
     node.radius = Number(n.size) || self.config.node.size;
+    node.width=n.width || self.config.node.width;
+    node.height=n.height || self.config.node.height;
     node.label = n.label || n.id;
     node.alpha = n.alpha || self.config.node.alpha;
     node.fillColor = self.getColor(n);
@@ -3610,6 +3652,8 @@
     if(node){
       node.label=this.currentNode.text=nodeInfo.name;
       node.radius = Number(nodeInfo.radius)||20;
+      node.width = Number(nodeInfo.width)||100;
+      node.height = Number(nodeInfo.height)||50;
       node.scaleX=node.scaleY= Number(nodeInfo.scale)||1;
       node.fillColor = this.converHexToRGB(nodeInfo.fillColor);
       node.shape=nodeInfo.shape;
