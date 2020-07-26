@@ -125,13 +125,16 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
 <td> <img src="http://media.graphvis.cn/second2.png" width = "300" alt="" align=center /> </td>
 <td><img src="http://media.graphvis.cn/secondbg.png" width = "300" alt="" align=center /></td>
 </tr>
+<tr>
+<td><img src="http://media.graphvis.cn/workflowdemo.png" width="300" alt=" align=center /></td>
+</tr>
 </table>
 
 ## GraphVis 交流讨论
 <table style="width:400px;">
 <tr>
 <td><img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" align=center /></td>
-<td><img src="http://media.graphvis.cn/mmqrcode1594653849408.png" width = "180" height = "300" alt="" align=center /></td>
+<td><img src="http://media.graphvis.cn/mmqrcode1595774530290.png" width = "180" height = "300" alt="" align=center /></td>
 </tr>
 </table>
 
