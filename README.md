@@ -1,12 +1,14 @@
 # GraphVis
 
+### 说明：github版本不再更新，如要使用最新版本，请转到码云查看下载 [码云Gitee](https://gitee.com/baopengdu/GraphVis)。
+
 ### 一个较为完善的图可视化引擎，支持自定义的可视化效果，集成多种经典网络布局算法，社区发现算法，路径分析算法，方便使用人员或开发者快速构建自己的图可视化分析应用。
 
 主页：[www.graphvis.cn](http://www.graphvis.cn)
 
-开发文档：[组件开发文档](http://www.graphvis.cn/graph/dev-doc/index.html)（完善中...）
+开发指南：[GraphVis开发指南](https://www.yuque.com/dashboard/docs)
 
-GitHub:[GitHub地址](https://github.com/dubaopeng/GraphVis)
+Gitee:[GitHub地址](https://gitee.com/baopengdu/GraphVis)
 
 ### 项目核心价值
 1. 快速高效的可视化引擎，支持大量数据的交互式操作。
