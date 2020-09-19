@@ -120,23 +120,23 @@ let visGraph = new VisGraph(document.getElementById(visDomId),
 
 <table style="width:600px;">
 <tr>
-<td> <img src="http://media.graphvis.cn/20200614023608.png" width = "300" alt="" align=center /> </td>
-<td><img src="http://media.graphvis.cn/tupuvis.png" width = "300" alt="" align=center /></td>
+<td> <img src="http://media.graphvis.cn/20200614023608.png" width = "300" alt=""/> </td>
+<td><img src="http://media.graphvis.cn/tupuvis.png" width = "300" alt=""/></td>
 </tr>
 <tr>
-<td> <img src="http://media.graphvis.cn/second2.png" width = "300" alt="" align=center /> </td>
-<td><img src="http://media.graphvis.cn/secondbg.png" width = "300" alt="" align=center /></td>
+<td><img src="http://media.graphvis.cn/second2.png" width = "300" alt="" /></td>
+<td><img src="http://media.graphvis.cn/secondbg.png" width = "300" alt="" /></td>
 </tr>
 <tr>
-<td><img src="http://media.graphvis.cn/workflowdemo.png" width="300" alt=" align=center /></td>
+<td><img src="http://media.graphvis.cn/workflowdemo.png" width="300" alt=""/></td>
 </tr>
 </table>
 
 ## GraphVis 交流讨论
 <table style="width:400px;">
 <tr>
-<td><img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" align=center /></td>
-<td><img src="http://media.graphvis.cn/mmqrcode1595774530290.png" width = "180" height = "300" alt="" align=center /></td>
+<td><img src="http://media.graphvis.cn/QQ-ercode.jpg" width = "180" height = "300" alt="" /></td>
+<td><img src="http://media.graphvis.cn/mmqrcode1595774530290.png" width = "180" height = "300" alt="" /></td>
 </tr>
 </table>
 
